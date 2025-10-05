@@ -38,6 +38,10 @@
             grid-column: 2;
             justify-content: flex-start;
         }
+        .panel.inventory-panel {
+            grid-column: 2;
+            justify-content: flex-start;
+        }
         .panel.log-panel {
             grid-column: 1 / -1;
             justify-content: center;
@@ -61,6 +65,78 @@
             width: 100%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             box-sizing: border-box;
+        }
+        .inventory-container {
+            background: white;
+            border: 3px solid #d0d0c8;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 300px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .inventory-title {
+            text-align: center;
+            font-size: 1.1em;
+            color: #6a6a60;
+            letter-spacing: 2px;
+        }
+        .inventory-subtitle {
+            text-align: center;
+            font-size: 0.8em;
+            color: #a0a098;
+            line-height: 1.4;
+        }
+        .inventory-grid {
+            display: grid;
+            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        }
+        .inventory-item {
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 8px;
+            text-align: center;
+            min-height: 140px;
+        }
+        .inventory-ascii {
+            font-family: 'Courier New', monospace;
+            font-size: 0.8em;
+            line-height: 1.1;
+            color: #6a6a60;
+            margin: 0;
+        }
+        .inventory-name {
+            font-size: 0.75em;
+            color: #6a6a60;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        .inventory-count {
+            font-size: 0.7em;
+            color: #8fa8bc;
+            letter-spacing: 1px;
+        }
+        .inventory-desc {
+            font-size: 0.7em;
+            color: #8c8c82;
+            line-height: 1.3;
+        }
+        .inventory-empty {
+            text-align: center;
+            color: #a0a098;
+            font-style: italic;
+            grid-column: 1 / -1;
         }
         .title {
             text-align: center;
@@ -562,12 +638,14 @@
             }
             .panel.creature-panel,
             .panel.locations-panel,
+            .panel.inventory-panel,
             .panel.log-panel {
                 grid-column: 1;
                 justify-content: flex-start;
             }
             .container,
             .location-container,
+            .inventory-container,
             .log-container {
                 max-width: none;
             }
@@ -581,6 +659,9 @@
                 max-height: 50vh;
             }
             .location-container {
+                padding: 24px;
+            }
+            .inventory-container {
                 padding: 24px;
             }
             .current-location-display {
@@ -607,6 +688,7 @@
             }
             .container,
             .location-container,
+            .inventory-container,
             .log-container {
                 padding: 18px;
             }
@@ -699,6 +781,7 @@
             }
             .panel.creature-panel,
             .panel.locations-panel,
+            .panel.inventory-panel,
             .panel.log-panel {
                 grid-column: auto;
             }
@@ -708,6 +791,9 @@
                 overflow-y: auto;
             }
             .locations-panel > .location-container {
+                width: min(100%, 360px);
+            }
+            .inventory-panel > .inventory-container {
                 width: min(100%, 360px);
             }
             .log-panel > .log-container {
@@ -814,6 +900,16 @@
             </div>
         </section>
 
+        <section class="panel inventory-panel">
+            <div class="inventory-container">
+                <div class="inventory-title">INVENTORY</div>
+                <div class="inventory-subtitle">Artifacts gathered through cycles and wanderings.</div>
+                <div class="inventory-grid" id="inventoryGrid">
+                    <div class="inventory-empty">No artifacts collected yet...</div>
+                </div>
+            </div>
+        </section>
+
         <section class="panel log-panel">
             <div class="log-container">
                 <div class="log-title">EVENT LOG</div>
@@ -825,6 +921,236 @@
     </div>
 
     <script>
+        const ITEMS = {
+            forest_spore: {
+                name: 'Forest Spore',
+                ascii: [
+                    '   ⌒⌒ ',
+                    '  (◍◍)',
+                    '   ⌣⌣ ',
+                    '    ✧ '
+                ].join('\n'),
+                desc: 'Spores gathered while nourishing the being.'
+            },
+            network_shard: {
+                name: 'Network Shard',
+                ascii: [
+                    '   ╔═╗ ',
+                    '  ║◇║ ',
+                    '   ╚═╝ ',
+                    '   ⋰⋱ '
+                ].join('\n'),
+                desc: 'A crystalline shard humming with network data.'
+            },
+            dream_resin: {
+                name: 'Dream Resin',
+                ascii: [
+                    '   ╭╮ ',
+                    '  ( ∴)',
+                    '   ╰╯ ',
+                    '   ˘  '
+                ].join('\n'),
+                desc: 'Viscous dreams condensed during periods of rest.'
+            },
+            echo_crystal: {
+                name: 'Echo Crystal',
+                ascii: [
+                    '   ▲  ',
+                    '  ◀◆▶',
+                    '   ▼  ',
+                    '   ✦  '
+                ].join('\n'),
+                desc: 'Captures faint impressions of witnessed moments.'
+            },
+            harmony_thread: {
+                name: 'Harmony Thread',
+                ascii: [
+                    '   ╱╲ ',
+                    '  ╱╳╲',
+                    '   ╲╱ ',
+                    '   ✺  '
+                ].join('\n'),
+                desc: 'A woven thread of communal resonance from Haven.'
+            },
+            sanctum_key: {
+                name: 'Sanctum Key',
+                ascii: [
+                    '   ╔╗ ',
+                    '  ║╬║',
+                    '   ╚╝ ',
+                    '   ⚿  '
+                ].join('\n'),
+                desc: 'Unlocks hidden ports within the Network Sanctum.'
+            },
+            void_dust: {
+                name: 'Void Dust',
+                ascii: [
+                    '   ·  ',
+                    '  ∘●∘',
+                    '   ·  ',
+                    '   ∞  '
+                ].join('\n'),
+                desc: 'Grains collected from the brink of nothingness.'
+            },
+            water_pearl: {
+                name: 'Water Pearl',
+                ascii: [
+                    '   ○  ',
+                    '  ◍◎ ',
+                    '   ○  ',
+                    '   ≋  '
+                ].join('\n'),
+                desc: 'Shimmering pearl formed within the Living Waters.'
+            },
+            dusk_ember: {
+                name: 'Dusk Ember',
+                ascii: [
+                    '   ║  ',
+                    '  ║╳║',
+                    '   ║  ',
+                    '   ✹  '
+                ].join('\n'),
+                desc: 'An ember preserved from eternal twilight.'
+            },
+            white_glimmer: {
+                name: 'White Glimmer',
+                ascii: [
+                    '   ✧ ',
+                    '  ✨✧',
+                    '   ✧ ',
+                    '   ⋆ '
+                ].join('\n'),
+                desc: 'Fleeting glow distilled from White Forest light.'
+            },
+            white_bloom: {
+                name: 'White Bloom',
+                ascii: [
+                    '   ✶  ',
+                    '  ❂❂ ',
+                    '   ✶  ',
+                    '   ✧  '
+                ].join('\n'),
+                desc: 'A rare bloom gifted by the White Forest itself.'
+            },
+            haven_cache: {
+                name: "Haven Cache",
+                ascii: [
+                    '   ╔╗ ',
+                    '  ║#║',
+                    '   ╚╝ ',
+                    '   ⌘  '
+                ].join('\n'),
+                desc: "Shared memories stored in Haven's communal vault."
+            },
+            dusk_totem: {
+                name: 'Dusk Totem',
+                ascii: [
+                    '   ▲  ',
+                    '  ║╳║',
+                    '   ▼  ',
+                    '   ☽  '
+                ].join('\n'),
+                desc: 'Carved focus from the perpetual duskwood shadows.'
+            },
+            water_mirror: {
+                name: 'Water Mirror',
+                ascii: [
+                    '   ╭╮',
+                    '  (◎)',
+                    '   ╰╯',
+                    '   ≈ '
+                ].join('\n'),
+                desc: 'Reflective droplet remembering every ripple.'
+            },
+            sanctum_plume: {
+                name: 'Sanctum Plume',
+                ascii: [
+                    '   ║  ',
+                    '  ║◇ ',
+                    '   ║  ',
+                    '   ✶  '
+                ].join('\n'),
+                desc: 'Residual plume of data rising from the sanctum core.'
+            },
+            tableau_reliquary: {
+                name: 'Tableau Reliquary',
+                ascii: [
+                    '   ╔╦╗',
+                    '  ║╬║',
+                    '   ╚╩╝',
+                    '   ✺ '
+                ].join('\n'),
+                desc: 'Encases fragments of the Seven Tableaus rituals.'
+            },
+            tableau_script: {
+                name: 'Tableau Script',
+                ascii: [
+                    '   ╔═╗',
+                    '  ║╫║',
+                    '   ╚═╝',
+                    '   ✢  '
+                ].join('\n'),
+                desc: 'Encoded mantra copied during meditative rest.'
+            },
+            void_shard: {
+                name: 'Void Shard',
+                ascii: [
+                    '   ◇ ',
+                    '  ◇◇',
+                    '   ◇ ',
+                    '   ⌀  '
+                ].join('\n'),
+                desc: 'A prismatic shard broken from the edge of oblivion.'
+            },
+            meteor_glass: {
+                name: 'Meteor Glass',
+                ascii: [
+                    '   ☄  ',
+                    '  ◇◇ ',
+                    '   ⌄  ',
+                    '   ✧  '
+                ].join('\n'),
+                desc: 'Molten glass cooled within a falling star.'
+            },
+            forest_blossom: {
+                name: 'Forest Blossom',
+                ascii: [
+                    '   ✿ ',
+                    '  ❀❀',
+                    '   ✿ ',
+                    '   ✧ '
+                ].join('\n'),
+                desc: 'Blessing petal bestowed by ancient guardians.'
+            },
+            shadow_cinder: {
+                name: 'Shadow Cinder',
+                ascii: [
+                    '   ░ ',
+                    '  ▓◈▓',
+                    '   ░ ',
+                    '   ◌ '
+                ].join('\n'),
+                desc: 'Smoldering remnant carried from the darkness.'
+            }
+        };
+
+        const LOCATION_RELICS = {
+            white_forest: 'white_bloom',
+            havens_rest: 'haven_cache',
+            duskwood: 'dusk_totem',
+            living_waters: 'water_mirror',
+            network_sanctum: 'sanctum_plume',
+            seven_tableaus: 'tableau_reliquary',
+            void_edge: 'void_shard'
+        };
+
+        const ACTION_ITEM_CHANCE = {
+            feed: 0.35,
+            connect: 0.3,
+            rest: 0.25,
+            observe: 0.35
+        };
+
         const LOCATIONS = {
             white_forest: {
                 name: 'White Forest',
@@ -1564,6 +1890,8 @@
             visitedStages: new Set([0]),
             rebirthReady: false,
             location: 'white_forest',
+            inventory: {},
+            collectedRelics: new Set(),
             visitedLocations: new Set(['white_forest']),
             locationTimer: 0,
             nextLocationDelay: 0,
@@ -1645,6 +1973,41 @@
             logElement.scrollTop = 0;
         }
 
+        function renderInventory() {
+            const grid = document.getElementById('inventoryGrid');
+            if (!grid) return;
+
+            const entries = Object.entries(state.inventory || {})
+                .filter(([, count]) => count > 0)
+                .sort(([idA], [idB]) => {
+                    const itemA = ITEMS[idA];
+                    const itemB = ITEMS[idB];
+                    if (!itemA || !itemB) return 0;
+                    return itemA.name.localeCompare(itemB.name);
+                });
+
+            if (entries.length === 0) {
+                grid.innerHTML = '<div class="inventory-empty">No artifacts collected yet...</div>';
+                return;
+            }
+
+            grid.innerHTML = entries.map(([itemId, count]) => {
+                const item = ITEMS[itemId];
+                if (!item) return '';
+                const ascii = escapeHtml(item.ascii || '');
+                const desc = escapeHtml(item.desc || '');
+                const countLabel = count > 1 ? `x${count}` : 'x1';
+                return `
+                    <div class="inventory-item">
+                        <pre class="inventory-ascii">${ascii}</pre>
+                        <div class="inventory-name">${escapeHtml(item.name)}</div>
+                        <div class="inventory-count">${countLabel}</div>
+                        <div class="inventory-desc">${desc}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
         function addLogEntry(message) {
             const cycle = typeof state !== 'undefined' ? state.totalAge : 0;
             logEntries.unshift({ cycle, message });
@@ -1652,6 +2015,64 @@
                 logEntries.pop();
             }
             renderLog();
+        }
+
+        function addInventoryItem(itemId) {
+            const item = ITEMS[itemId];
+            if (!item) return '';
+
+            if (!state.inventory[itemId]) {
+                state.inventory[itemId] = 0;
+            }
+            state.inventory[itemId]++;
+            renderInventory();
+
+            const count = state.inventory[itemId];
+            const suffix = count > 1 ? ` (x${count})` : '';
+            return `\n✧ Acquired: ${item.name}${suffix}!`;
+        }
+
+        function resolveActionItem(action) {
+            switch (action) {
+                case 'feed':
+                    if (state.location === 'living_waters') return 'water_pearl';
+                    if (state.location === 'duskwood') return 'dusk_ember';
+                    if (state.location === 'void_edge') return 'void_dust';
+                    return 'forest_spore';
+                case 'connect':
+                    if (state.location === 'havens_rest') return 'harmony_thread';
+                    if (state.location === 'network_sanctum') return 'sanctum_key';
+                    return 'network_shard';
+                case 'rest':
+                    if (state.location === 'seven_tableaus') return 'tableau_script';
+                    return 'dream_resin';
+                case 'observe':
+                    if (state.location === 'void_edge') return 'void_dust';
+                    if (state.location === 'white_forest') return 'white_glimmer';
+                    return 'echo_crystal';
+                default:
+                    return null;
+            }
+        }
+
+        function maybeGainActionItem(action) {
+            const chance = ACTION_ITEM_CHANCE[action] || 0;
+            if (chance <= 0) return '';
+            if (Math.random() >= chance) return '';
+
+            const itemId = resolveActionItem(action);
+            if (!itemId) return '';
+
+            return addInventoryItem(itemId);
+        }
+
+        function collectLocationRelic(locationId) {
+            const itemId = LOCATION_RELICS[locationId];
+            if (!itemId) return '';
+            if (state.collectedRelics.has(itemId)) return '';
+
+            state.collectedRelics.add(itemId);
+            return addInventoryItem(itemId);
         }
 
         const messages = {
@@ -1783,7 +2204,8 @@
             const travelMessage = auto
                 ? `✦ The being drifts toward ${location.name} ✦\n${location.desc}`
                 : `✦ Traveled to ${location.name} ✦\n${location.desc}`;
-            showMessage(travelMessage);
+            const relicMessage = collectLocationRelic(locationId);
+            showMessage(travelMessage + relicMessage);
             updateDisplay();
             checkAllBadges();
         }
@@ -1950,7 +2372,8 @@
             state.saturation = Math.min(600, state.saturation + 30);
             state.harmony = Math.min(100, state.harmony + 20);
             unlockBadge('meteor_witness');
-            showMessage('☄ A meteor shower illuminates the White Forest!\nCosmic energies infuse your being...');
+            const bonus = addInventoryItem('meteor_glass');
+            showMessage('☄ A meteor shower illuminates the White Forest!\nCosmic energies infuse your being...' + bonus);
             updateDisplay();
         }
 
@@ -1959,7 +2382,8 @@
             state.flux = 100;
             state.harmony = 100;
             unlockBadge('forest_blessed');
-            showMessage('✦ The ancient forest bestows its blessing!\nYou are filled with primordial energy...');
+            const bonus = addInventoryItem('forest_blossom');
+            showMessage('✦ The ancient forest bestows its blessing!\nYou are filled with primordial energy...' + bonus);
             updateDisplay();
         }
 
@@ -1967,7 +2391,8 @@
             state.lastRareEvent = state.age;
             state.flux = Math.max(10, state.flux - 20);
             unlockBadge('shadow_walker');
-            showMessage('◐ Shadows gather... but you persist.\nDarkness is merely another teacher...');
+            const bonus = addInventoryItem('shadow_cinder');
+            showMessage('◐ Shadows gather... but you persist.\nDarkness is merely another teacher...' + bonus);
             updateDisplay();
         }
 
@@ -2356,6 +2781,7 @@
                 `;
             }).join('');
 
+            renderInventory();
             displayBadges();
         }
 
@@ -2379,7 +2805,9 @@
             state.actionPoints--;
             state.flux = Math.min(100, state.flux + 15);
             state.harmony = Math.min(100, state.harmony + 5);
-            showMessage(randomChoice(messages.feed));
+            const feedMessage = randomChoice(messages.feed);
+            const feedBonus = maybeGainActionItem('feed');
+            showMessage(feedMessage + feedBonus);
             updateDisplay();
         }
 
@@ -2393,7 +2821,9 @@
                 state.flux -= 10;
                 state.saturation = Math.min(600, state.saturation + 8);
                 state.harmony = Math.min(100, state.harmony + 10);
-                showMessage(randomChoice(messages.connect));
+                const connectMessage = randomChoice(messages.connect);
+                const connectBonus = maybeGainActionItem('connect');
+                showMessage(connectMessage + connectBonus);
             } else {
                 showMessage('Not enough flux to establish connection...');
             }
@@ -2409,7 +2839,9 @@
             state.flux = Math.min(100, state.flux + 8);
             state.saturation = Math.min(600, state.saturation + 3);
             state.harmony = Math.min(100, state.harmony + 12);
-            showMessage(randomChoice(messages.rest));
+            const restMessage = randomChoice(messages.rest);
+            const restBonus = maybeGainActionItem('rest');
+            showMessage(restMessage + restBonus);
             updateDisplay();
         }
 
@@ -2421,7 +2853,9 @@
             state.actionPoints--;
             state.harmony = Math.min(100, state.harmony + 8);
             state.saturation = Math.min(600, state.saturation + 2);
-            showMessage(randomChoice(messages.observe));
+            const observeMessage = randomChoice(messages.observe);
+            const observeBonus = maybeGainActionItem('observe');
+            showMessage(observeMessage + observeBonus);
             updateDisplay();
         }
 
