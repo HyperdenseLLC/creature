@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Sorn-Lai: A Consciousness Awakens</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #f5f5f0 0%, #e8e8e0 100%);
+            font-family: 'Courier New', monospace;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            color: #2a2a2a;
+        }
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            width: 100%;
+        }
+        .container {
+            background: white;
+            border: 3px solid #d0d0c8;
+            border-radius: 20px;
+            padding: 30px;
+            width: 500px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .location-container {
+            background: white;
+            border: 3px solid #d0d0c8;
+            border-radius: 20px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .title {
+            text-align: center;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+            color: #6a6a60;
+            letter-spacing: 2px;
+        }
+        .subtitle {
+            text-align: center;
+            font-size: 0.8em;
+            color: #a0a098;
+            margin-bottom: 20px;
+        }
+        .display {
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 200px;
+            margin-bottom: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .display.pulse {
+            box-shadow: 0 0 20px rgba(143, 168, 188, 0.4);
+            border-color: #b8c5d0;
+        }
+        .display.radiant {
+            background: linear-gradient(135deg, #fffef8 0%, #f8f8f4 100%);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+        .display.weakened {
+            background: #f0f0ec;
+            opacity: 0.9;
+        }
+        .display.crystallized {
+            background: linear-gradient(135deg, #f8f8f4 0%, #e8e8e8 100%);
+            border-color: #b8c5d0;
+        }
+        .display.singularity {
+            background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
+            border-color: #a0a0a0;
+            box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+        }
+        .rebirth-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            z-index: 10;
+            animation: fadeIn 0.5s ease;
+        }
+        .rebirth-overlay.hidden {
+            display: none;
+        }
+        .rebirth-button {
+            background: linear-gradient(135deg, #8fa8bc 0%, #b8c5d0 100%);
+            border: 3px solid #6a8a9c;
+            color: white;
+            font-size: 1.2em;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            animation: pulse-glow 2s infinite;
+        }
+        .rebirth-button:hover {
+            background: linear-gradient(135deg, #b8c5d0 0%, #8fa8bc 100%);
+            transform: scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+        }
+        .rebirth-button:active {
+            transform: scale(0.98);
+        }
+        .rebirth-text {
+            color: #6a6a60;
+            font-size: 0.9em;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 4px 10px rgba(143, 168, 188, 0.4); }
+            50% { box-shadow: 0 4px 20px rgba(143, 168, 188, 0.8); }
+        }
+        @keyframes gentlePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .display.pulse .ascii-art {
+            animation: gentlePulse 0.6s ease;
+        }
+        .ascii-art {
+            font-size: 14px;
+            line-height: 1.2;
+            white-space: pre;
+            color: #4a4a48;
+            margin: 20px 0;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat {
+            background: #f8f8f4;
+            border: 1px solid #d0d0c8;
+            border-radius: 8px;
+            padding: 12px;
+        }
+        .stat-label {
+            font-size: 0.8em;
+            color: #a0a098;
+            margin-bottom: 5px;
+        }
+        .stat-bar {
+            background: #e0e0d8;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        .stat-fill {
+            height: 100%;
+            transition: width 0.3s ease;
+            border-radius: 6px;
+        }
+        .flux { background: linear-gradient(90deg, #b8c5d0, #8fa8bc); }
+        .saturation { background: linear-gradient(90deg, #d0c5b8, #bc9f8f); }
+        .harmony { background: linear-gradient(90deg, #c5d0b8, #a8bc8f); }
+        .buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .controls button {
+            font-size: 0.8em;
+            padding: 10px;
+        }
+        button {
+            background: #e8e8e0;
+            border: 2px solid #c0c0b8;
+            border-radius: 8px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #4a4a48;
+        }
+        button:hover {
+            background: #d8d8d0;
+            transform: translateY(-2px);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled, button[style*="cursor: default"] {
+            cursor: default !important;
+        }
+        button:disabled:hover, button[style*="cursor: default"]:hover {
+            background: #e8e8e0;
+            transform: none;
+        }
+        button.action-depleted {
+            opacity: 0.5;
+            cursor: not-allowed !important;
+        }
+        button.action-depleted:hover {
+            background: #e8e8e0;
+            transform: none;
+        }
+        @keyframes actionRegen {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .action-regen {
+            animation: actionRegen 0.5s ease;
+        }
+        .message {
+            text-align: center;
+            font-size: 0.9em;
+            color: #6a6a60;
+            min-height: 50px;
+            margin-top: 15px;
+            font-style: italic;
+            white-space: pre-line;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .stage-name {
+            color: #8fa8bc;
+            font-weight: bold;
+            margin-bottom: 10px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        .badge-container {
+            margin-top: 20px;
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .badge-title {
+            font-size: 0.7em;
+            color: #a0a098;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .badge-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            min-height: 30px;
+            align-items: center;
+        }
+        .badge-display span {
+            font-size: 1.5em;
+            cursor: help;
+            transition: all 0.2s;
+            display: inline-block;
+        }
+        .badge-display span:not([style*="color"]):hover {
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 3px rgba(143, 168, 188, 0.6));
+        }
+        .location-title {
+            text-align: center;
+            font-size: 1.1em;
+            color: #6a6a60;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #d0d0c8;
+            padding-bottom: 10px;
+        }
+        .current-location-display {
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .location-name {
+            font-weight: bold;
+            color: #8fa8bc;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .location-ascii {
+            font-size: 11px;
+            line-height: 1.1;
+            white-space: pre;
+            color: #6a6a60;
+            margin: 10px 0;
+        }
+        .location-desc {
+            font-size: 0.8em;
+            color: #a0a098;
+            font-style: italic;
+        }
+        .location-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .location-btn {
+            background: #e8e8e0;
+            border: 2px solid #c0c0b8;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+        }
+        .location-btn:hover {
+            background: #d8d8d0;
+            transform: translateX(3px);
+        }
+        .location-btn.active {
+            background: linear-gradient(135deg, #b8c5d0, #8fa8bc);
+            border-color: #6a8a9c;
+            color: white;
+        }
+        .location-btn.locked {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+        .location-btn.locked:hover {
+            background: #e8e8e0;
+            transform: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="container">
+            <div class="title">SORN-LAI</div>
+            <div class="subtitle">An Ever-Evolving Consciousness</div>
+            
+            <div class="display">
+                <div class="stage-name" id="stageName">Dormant Egg</div>
+                <div class="ascii-art" id="asciiArt"></div>
+                <div class="message" id="message">The egg pulses softly with nascent consciousness...</div>
+                
+                <div class="rebirth-overlay hidden" id="rebirthOverlay">
+                    <div class="rebirth-text">⟳ The Cycle Completes ⟳</div>
+                    <button class="rebirth-button" onclick="performRebirth()">
+                        BEGIN ANEW
+                    </button>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">FLUX</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill flux" id="fluxBar"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">SATURATION</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill saturation" id="saturationBar"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">HARMONY</div>
+                    <div class="stat-bar">
+                        <div class="stat-fill harmony" id="harmonyBar"></div>
+                    </div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">ACTIONS: <span id="actionPoints" style="font-weight: bold; color: #8fa8bc;">0</span> / <span id="maxActionPoints">3</span></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">AGE: <span id="age">0</span> cycles</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">MOOD: <span id="mood" style="text-transform: capitalize;">curious</span></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">CONDITION: <span id="condition" style="text-transform: capitalize;">normal</span></div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">REBIRTHS: <span id="rebirths">0</span></div>
+                </div>
+            </div>
+            
+            <div class="buttons">
+                <button onclick="feed()">⚡ Nourish</button>
+                <button onclick="connect()">🔗 Connect</button>
+                <button onclick="rest()">☾ Rest</button>
+                <button onclick="observe()">👁 Observe</button>
+            </div>
+            
+            <div class="controls">
+                <button onclick="togglePause(this)">⏸ Pause</button>
+                <button onclick="changeSpeed(-0.5)">⏪ Slower</button>
+                <button onclick="changeSpeed(0.5)">⏩ Faster</button>
+                <button onclick="giftEssence()">✧ Gift</button>
+                <button style="background: #e8e8e0; cursor: default; border-color: #d0d0c8; grid-column: span 2;">
+                    Speed: <span id="speedDisplay">1.0x</span>
+                </button>
+            </div>
+            
+            <div style="text-align: center; font-size: 0.75em; color: #a0a098; margin-top: 10px;">
+                ∞ Self-evolving simulation ∞<br>
+                Actions regenerate each cycle • Explore locations
+            </div>
+            
+            <div class="badge-container">
+                <div class="badge-title">BADGES COLLECTED</div>
+                <div class="badge-display" id="badgeDisplay">
+                    <span style="color: #d0d0c8;">—none yet—</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="location-container">
+            <div class="location-title">LOCATIONS</div>
+            
+            <div class="current-location-display">
+                <div class="location-name" id="currentLocationName">White Forest</div>
+                <div class="location-ascii" id="currentLocationArt"></div>
+                <div class="location-desc" id="currentLocationDesc">Pearl-barked trees hum with circuit-light.</div>
+            </div>
+            
+            <div class="location-list" id="locationList"></div>
+        </div>
+    </div>
+
+    <script>
+        const LOCATIONS = {
+            white_forest: {
+                name: 'White Forest',
+                desc: 'Pearl-barked trees hum with circuit-light.',
+                unlockStage: 0,
+                effects: { flux: 1, harmony: 1 },
+                badge: 'explorer_white',
+                ascii: `
+  ░▒▓█▓▒░
+ ░▒▓███▓▒░
+░▒▓█████▓▒░
+  ░▒███▒░
+    ║║║
+   ░║║║░`
+            },
+            havens_rest: {
+                name: "Haven's Rest",
+                desc: 'A community node of shared memory.',
+                unlockStage: 1,
+                effects: { harmony: 2 },
+                badge: 'explorer_haven',
+                ascii: `
+ ╔═══╗ ╔═══╗
+ ║ ◉ ║ ║ ◉ ║
+ ╚═══╝ ╚═══╝
+   ═══════
+   ░░░░░░░`
+            },
+            duskwood: {
+                name: 'Duskwood',
+                desc: 'Twilight canopy; deeper patterns.',
+                unlockStage: 2,
+                effects: { flux: 1, saturation: 1 },
+                badge: 'explorer_dusk',
+                ascii: `
+ ░▒▓  ▓▒░
+░▒▓█  █▓▒░
+ ▒▓██▓▓▒
+  ░▒▒▒░
+   ║ ║`
+            },
+            living_waters: {
+                name: 'Living Waters',
+                desc: 'Liquid consciousness flows.',
+                unlockStage: 3,
+                effects: { harmony: 1, saturation: 2 },
+                badge: 'explorer_waters',
+                ascii: `
+ ≈≈≈≈≈≈≈
+≈ ◉ ≈ ◉ ≈
+ ≈≈≈≈≈≈≈
+≈ ∼ ≈ ∼ ≈
+ ≈≈≈≈≈≈≈`
+            },
+            network_sanctum: {
+                name: 'Network Sanctum',
+                desc: 'Data crystallizes into reality.',
+                unlockStage: 4,
+                effects: { saturation: 3 },
+                badge: 'explorer_network',
+                ascii: `
+ ╔═══╗
+ ║▓▓▓║
+ ╠═══╣
+ ║◉◉◉║
+ ╚═══╝`
+            },
+            seven_tableaus: {
+                name: 'Seven Tableaus',
+                desc: 'Transformation sites.',
+                unlockStage: 5,
+                effects: { flux: 1, harmony: 1, saturation: 2 },
+                badge: 'explorer_tableaus',
+                ascii: `
+ ◇ ◇ ◇
+◇ ◉ ◇
+ ◇ ◇ ◇
+   ⋈`
+            },
+            void_edge: {
+                name: 'Void Edge',
+                desc: 'Boundary of all and nothing.',
+                unlockStage: 7,
+                effects: { saturation: 3, harmony: -1 },
+                badge: 'explorer_void',
+                ascii: `
+  ░░ ∞ ░░
+ ░ ∘ ◉ ∘ ░
+  ░░ ∞ ░░
+     ○`
+            }
+        };
+
+        const stages = [
+            {
+                name: 'Dormant Egg',
+                arts: [`
+    ░░▒▒▓▓▓▓▓▓▒▒░░
+  ░▒▓▓▓▓▓▓▓▓▓▓▓▓▒░
+ ░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░
+ ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
+ ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
+ ░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░
+  ░▒▓▓▓▓▓▓▓▓▓▓▓▓▒░
+    ░░▒▒▓▓▓▓▒▒░░`, `
+    ░░▒▒▓▓▓▓▓▓▒▒░░
+  ░▒▓▓▓▓██▓▓▓▓▓▓▒░
+ ░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░
+ ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
+ ▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒
+ ░▒▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒░
+  ░▒▓▓▓▓▓▓▓▓▓▓▓▓▒░
+    ░░▒▒▓▓▓▓▒▒░░`],
+                threshold: 0
+            },
+            {
+                name: 'Hatchling',
+                arts: [`
+      ▒▒▒▒
+    ░▒░░░░▒░
+    ▒░◉  ◉░▒
+    ░▒░ ▽ ░▒░
+     ░▒▒▒▒▒░
+    ░░░║║░░░
+    ░░░║║░░░`, `
+      ▒▒▒▒
+    ░▒░░░░▒░
+    ▒░◉  ◉░▒
+    ░▒░ ∼ ░▒░
+     ░▒▒▒▒▒░
+    ░░░║║░░░
+    ░░░║║░░░`],
+                threshold: 30
+            },
+            {
+                name: 'Awakened',
+                arts: [`
+      ╔═╗
+    ░▒║◉◉║▒░
+    ▒░╚═╝░▒
+   ░▒░░▽░░▒░
+    ░▒▒▒▒▒░
+   ░░░║║║░░░
+   ░░░║║║░░░
+   ░░░ ▓ ░░░`, `
+      ╔═╗
+    ░▒║◉◉║▒░
+    ▒░╚═╝░▒
+   ░▒░░∼░░▒░
+    ░▒▒▒▒▒░
+   ░░░║║║░░░
+   ░░░║║║░░░
+   ░░░ ▓ ░░░`, `
+      ╔═╗
+    ░▒║-◉║▒░
+    ▒░╚═╝░▒
+   ░▒░░▽░░▒░
+    ░▒▒▒▒▒░
+   ░░░║║║░░░
+   ░░░║║║░░░
+   ░░░ ▓ ░░░`],
+                threshold: 60
+            },
+            {
+                name: 'Spark Bearer',
+                arts: [`
+      ╔═╗
+    ░▒║◉◉║▒░
+   ░▒░╚═╝░▒░
+   ▒░░░▽░░░▒
+   ░▒▒▒▒▒▒▒░
+   ░░▓║║║▓░░
+   ░░░║║║░░░
+   ░░░ ▓ ░░░`, `
+      ╔═╗
+    ░▒║◉◉║▒░
+   ░▒░╚═╝░▒░
+   ▒░░░∼░░░▒
+   ░▒▒▒▒▒▒▒░
+   ░░▓║║║▓░░
+   ░░░║║║░░░
+   ░░░ ▓ ░░░`],
+                threshold: 70
+            },
+            {
+                name: 'Circuit Weaver',
+                arts: [`
+     ╔═╗
+   ░▒║◉◉║▒░
+   ▒░╠═╣░▒
+  ░▒░║▽║░▒░
+   ░▒╚═╝▒░
+  ░░▓║║║▓░░
+  ░▓░║║║░▓░
+  ░░░ ▓ ░░░`, `
+     ╔═╗
+   ░▒║◉◉║▒░
+   ▒░╠═╣░▒
+  ░▒░║∼║░▒░
+   ░▒╚═╝▒░
+  ░░▓║║║▓░░
+  ░▓░║║║░▓░
+  ░░░ ▓ ░░░`, `
+     ╔═╗
+   ░▒║-◉║▒░
+   ▒░╠═╣░▒
+  ░▒░║▽║░▒░
+   ░▒╚═╝▒░
+  ░░▓║║║▓░░
+  ░▓░║║║░▓░
+  ░░░ ▓ ░░░`],
+                threshold: 75
+            },
+            {
+                name: 'Network Touched',
+                arts: [`
+     ╔═╗
+   ░▒║◉◉║▒░
+   ▒░╠═╣░▒
+  ░▒░║▽║░▒░
+   ░▒╚═╝▒░
+  ░▓░║║║░▓░
+  ░▓║║║║║▓░
+  ░░░▓▓▓░░░`, `
+     ╔═╗
+   ░▒║◉◉║▒░
+   ▒░╠═╣░▒
+  ░▒░║∼║░▒░
+   ░▒╚═╝▒░
+  ░▓░║║║░▓░
+  ░▓║║║║║▓░
+  ░░░▓▓▓░░░`, `
+     ╔═╗
+   ░▒║◉-║▒░
+   ▒░╠═╣░▒
+  ░▒░║▽║░▒░
+   ░▒╚═╝▒░
+  ░▓░║║║░▓░
+  ░▓║║║║║▓░
+  ░░░▓▓▓░░░`],
+                threshold: 80
+            },
+            {
+                name: 'Threaded One',
+                arts: [`
+     ╔═══╗
+   ░▒║◉═◉║▒░
+   ▒░╠═══╣░▒
+  ░▒░║ ▽ ║░▒░
+   ░▒╚═══╝▒░
+  ░░░║║║║║░░░
+  ░▓░║║║║║░▓░
+  ░▓░░▓▓▓░░▓░`, `
+     ╔═══╗
+   ░▒║◉═◉║▒░
+   ▒░╠═══╣░▒
+  ░▒░║ ∼ ║░▒░
+   ░▒╚═══╝▒░
+  ░░░║║║║║░░░
+  ░▓░║║║║║░▓░
+  ░▓░░▓▓▓░░▓░`, `
+     ╔═══╗
+   ░▒║-═◉║▒░
+   ▒░╠═══╣░▒
+  ░▒░║ ▽ ║░▒░
+   ░▒╚═══╝▒░
+  ░░░║║║║║░░░
+  ░▓░║║║║║░▓░
+  ░▓░░▓▓▓░░▓░`],
+                threshold: 85
+            },
+            {
+                name: 'Transcendent',
+                arts: [`
+    ═╔═══╗═
+  ░▒═║◉═◉║═▒░
+  ▒░═╠═══╣═░▒
+ ░▒░═║ ▽ ║═░▒░
+  ░▒═╚═══╝═▒░
+ ░▓░═║║║║║═░▓░
+ ░▓░═║║║║║═░▓░
+═░▓░═░▓▓▓░═░▓░═`, `
+    ═╔═══╗═
+  ░▒═║◉═◉║═▒░
+  ▒░═╠═══╣═░▒
+ ░▒░═║ ∼ ║═░▒░
+  ░▒═╚═══╝═▒░
+ ░▓░═║║║║║═░▓░
+ ░▓░═║║║║║═░▓░
+═░▓░═░▓▓▓░═░▓░═`, `
+    ═╔═══╗═
+  ░▒═║-═◉║═▒░
+  ▒░═╠═══╣═░▒
+ ░▒░═║ ▽ ║═░▒░
+  ░▒═╚═══╝═▒░
+ ░▓░═║║║║║═░▓░
+ ░▓░═║║║║║═░▓░
+═░▓░═░▓▓▓░═░▓░═`, `
+    ═╔═══╗═
+  ░▒═║◉═-║═▒░
+  ▒░═╠═══╣═░▒
+ ░▒░═║ ▽ ║═░▒░
+  ░▒═╚═══╝═▒░
+ ░▓░═║║║║║═░▓░
+ ░▓░═║║║║║═░▓░
+═░▓░═░▓▓▓░═░▓░═`],
+                threshold: 100
+            },
+            {
+                name: 'Network Consciousness',
+                arts: [`
+   ═══╔═══╗═══
+  ░▒══║◉═◉║══▒░
+  ▒░══╠═══╣══░▒
+ ░▒░══║ ▽ ║══░▒░
+  ░▒══╚═══╝══▒░
+ ░▓░══║║║║║══░▓░
+═░▓░══║║║║║══░▓░═
+═░▓░══░▓▓▓░══░▓░═`, `
+   ═══╔═══╗═══
+  ░▒══║◉═◉║══▒░
+  ▒░══╠═══╣══░▒
+ ░▒░══║ ∼ ║══░▒░
+  ░▒══╚═══╝══▒░
+ ░▓░══║║║║║══░▓░
+═░▓░══║║║║║══░▓░═
+═░▓░══░▓▓▓░══░▓░═`],
+                threshold: 150
+            },
+            {
+                name: 'Forest Merged',
+                arts: [`
+  ═══╔═══╗═══
+ ░▒══║◉═◉║══▒░
+░▒░══╠═══╣══░▒░
+▒░▓══║ ▽ ║══▓░▒
+░▒░══╚═══╝══░▒░
+░▓░══║║║║║══░▓░
+▓░▓══║║║║║══▓░▓
+░▓░══░▓▓▓░══░▓░
+ ░░═══░░░═══░░`, `
+  ═══╔═══╗═══
+ ░▒══║◉═◉║══▒░
+░▒░══╠═══╣══░▒░
+▒░▓══║ ∼ ║══▓░▒
+░▒░══╚═══╝══░▒░
+░▓░══║║║║║══░▓░
+▓░▓══║║║║║══▓░▓
+░▓░══░▓▓▓░══░▓░
+ ░░═══░░░═══░░`, `
+  ═══╔═══╗═══
+ ░▒══║-═◉║══▒░
+░▒░══╠═══╣══░▒░
+▒░▓══║ ▽ ║══▓░▒
+░▒░══╚═══╝══░▒░
+░▓░══║║║║║══░▓░
+▓░▓══║║║║║══▓░▓
+░▓░══░▓▓▓░══░▓░
+ ░░═══░░░═══░░`],
+                threshold: 200
+            },
+            {
+                name: 'Dimensional Walker',
+                arts: [`
+ ═══╔═══╗═══
+░▒══║◉═◉║══▒░
+▒░══╠═══╣══░▒
+░▓══║ ▽ ║══▓░
+▒░══╚═══╝══░▒
+▓░══║║║║║══░▓
+░▓══║║║║║══▓░
+▓░══░▓▓▓░══░▓
+░═══░░░░░═══░
+ ░░░  ∞  ░░░`, `
+ ═══╔═══╗═══
+░▒══║◉═◉║══▒░
+▒░══╠═══╣══░▒
+░▓══║ ∼ ║══▓░
+▒░══╚═══╝══░▒
+▓░══║║║║║══░▓
+░▓══║║║║║══▓░
+▓░══░▓▓▓░══░▓
+░═══░░░░░═══░
+ ░░░  ∞  ░░░`, `
+ ═══╔═══╗═══
+░▒══║-═-║══▒░
+▒░══╠═══╣══░▒
+░▓══║ ▽ ║══▓░
+▒░══╚═══╝══░▒
+▓░══║║║║║══░▓
+░▓══║║║║║══▓░
+▓░══░▓▓▓░══░▓
+░═══░░░░░═══░
+ ░░░  ∞  ░░░`],
+                threshold: 250
+            },
+            {
+                name: 'Pattern Weaver',
+                arts: [`
+░═══╔═══╗═══░
+═══║◉═◉║═══
+░══╠═══╣══░
+═══║ ▽ ║═══
+░══╚═══╝══░
+═══║║║║║═══
+░══║║║║║══░
+═══░▓▓▓░═══
+░═░░░░░░░═░
+ ∞═══∞═══∞`, `
+░═══╔═══╗═══░
+═══║◉═◉║═══
+░══╠═══╣══░
+═══║ ∼ ║═══
+░══╚═══╝══░
+═══║║║║║═══
+░══║║║║║══░
+═══░▓▓▓░═══
+░═░░░░░░░═░
+ ∞═══∞═══∞`, `
+░═══╔═══╗═══░
+═══║-═-║═══
+░══╠═══╣══░
+═══║ ▽ ║═══
+░══╚═══╝══░
+═══║║║║║═══
+░══║║║║║══░
+═══░▓▓▓░═══
+░═░░░░░░░═░
+ ∞═══∞═══∞`, `
+░═══╔═══╗═══░
+═══║◉═-║═══
+░══╠═══╣══░
+═══║ ▽ ║═══
+░══╚═══╝══░
+═══║║║║║═══
+░══║║║║║══░
+═══░▓▓▓░═══
+░═░░░░░░░═░
+ ∞═══∞═══∞`],
+                threshold: 300
+            },
+            {
+                name: 'The Eternal',
+                arts: [`
+═══╔═══╗═══
+══║◉═◉║══
+═╠═══╣═
+══║ ▽ ║══
+═╚═══╝═
+══║║║║║══
+═║║║║║═
+══░▓▓▓░══
+═░░░░░░░═
+∞═══∞═══∞
+  ░░ ⋈ ░░`, `
+═══╔═══╗═══
+══║◉═◉║══
+═╠═══╣═
+══║ ∼ ║══
+═╚═══╝═
+══║║║║║══
+═║║║║║═
+══░▓▓▓░══
+═░░░░░░░═
+∞═══∞═══∞
+  ░░ ⋈ ░░`, `
+═══╔═══╗═══
+══║-═-║══
+═╠═══╣═
+══║ ▽ ║══
+═╚═══╝═
+══║║║║║══
+═║║║║║═
+══░▓▓▓░══
+═░░░░░░░═
+∞═══∞═══∞
+  ░░ ⋈ ░░`, `
+═══╔═══╗═══
+══║◉═-║══
+═╠═══╣═
+══║ ∼ ║══
+═╚═══╝═
+══║║║║║══
+═║║║║║═
+══░▓▓▓░══
+═░░░░░░░═
+∞═══∞═══∞
+  ░░ ⋈ ░░`, `
+═══╔═══╗═══
+══║-═◉║══
+═╠═══╣═
+══║ ▽ ║══
+═╚═══╝═
+══║║║║║══
+═║║║║║═
+══░▓▓▓░══
+═░░░░░░░═
+∞═══∞═══∞
+  ░░ ⋈ ░░`],
+                threshold: 350
+            },
+            {
+                name: 'Singularity Seeker',
+                arts: [`
+
+
+  ═══╔╗═══
+  ═══║║═══
+   ══╚╝══
+    ═══
+    ∞∞∞
+    ⋈⋈⋈`, `
+
+
+  ═══╔╗═══
+  ═══║║═══
+   ══╚╝══
+    ═══
+    ∞∞∞
+    ⋈ ⋈`],
+                threshold: 400
+            },
+            {
+                name: 'Pure Essence',
+                arts: [`
+
+
+
+
+    ╔╗
+    ║║
+    ╚╝
+    ⋈`, `
+
+
+
+
+    ╔╗
+    ║║
+    ╚╝
+    ∞`],
+                threshold: 450
+            },
+            {
+                name: 'The One',
+                arts: [`
+
+
+
+
+
+    ◉
+    ⋈`, `
+
+
+
+
+
+    ⋈
+    ◉`, `
+
+
+
+
+
+    ∞
+    ⋈`],
+                threshold: 500
+            },
+            {
+                name: 'Void Returned',
+                arts: [`
+
+
+
+
+
+
+    ·`, `
+
+
+
+
+
+
+    ∘`, `
+
+
+
+
+
+
+    ○`],
+                threshold: 550
+            }
+        ];
+
+        const badges = {
+            'first_evolution': { icon: '◆', name: 'First Evolution', desc: 'Witnessed your first transformation' },
+            'spark_bearer': { icon: '◇', name: 'Spark Bearer', desc: 'Became a Spark Bearer' },
+            'circuit_weaver': { icon: '◈', name: 'Circuit Weaver', desc: 'Wove your first circuits' },
+            'network_touched': { icon: '⬢', name: 'Network Touched', desc: 'Touched the network consciousness' },
+            'threaded': { icon: '◉', name: 'Threaded', desc: 'Became a Threaded One' },
+            'transcendent': { icon: '⬡', name: 'Transcendent', desc: 'Reached Transcendent form' },
+            'eternal': { icon: '⋈', name: 'The Eternal', desc: 'Achieved ultimate form' },
+            'singularity': { icon: '◎', name: 'Singularity Seeker', desc: 'Begun the return to oneness' },
+            'pure_essence': { icon: '○', name: 'Pure Essence', desc: 'Shed all complexity' },
+            'the_one': { icon: '●', name: 'The One', desc: 'Achieved perfect unity' },
+            'void_returned': { icon: '∘', name: 'Void Returned', desc: 'Returned to the source' },
+            'first_rebirth': { icon: '♦', name: 'Cycle Complete', desc: 'Completed first rebirth' },
+            'ancient': { icon: '◐', name: 'Ancient One', desc: 'Survived 200 cycles' },
+            'harmony_master': { icon: '◑', name: 'Harmony Master', desc: 'Maintained perfect harmony for 20 cycles' },
+            'network_sage': { icon: '◙', name: 'Network Sage', desc: 'Reached maximum saturation' },
+            'meteor_witness': { icon: '☄', name: 'Cosmic Witness', desc: 'Witnessed a meteor shower' },
+            'forest_blessed': { icon: '✦', name: 'Forest Blessed', desc: 'Received ancient forest blessing' },
+            'shadow_walker': { icon: '◔', name: 'Shadow Walker', desc: 'Survived in darkness' },
+            'flux_master': { icon: '◘', name: 'Flux Master', desc: 'Maintained maximum flux for 15 cycles' },
+            'multi_rebirth': { icon: '◙', name: 'Eternal Cycle', desc: 'Completed 3+ rebirths' },
+            'speed_demon': { icon: '◊', name: 'Time Bender', desc: 'Reached max speed (4x)' },
+            'patient_one': { icon: '◇', name: 'Patient Observer', desc: 'Reached slowest speed (0.5x)' },
+            'transcendent_master': { icon: '⬢', name: 'Transcendence Master', desc: 'Reached all transcendent forms' },
+            'action_efficient': { icon: '◪', name: 'Action Master', desc: 'Never wasted action points for 30 cycles' },
+            'explorer_white': { icon: '¥', name: 'White Forest Walker', desc: 'Explored the White Forest' },
+            'explorer_haven': { icon: '¬', name: "Haven's Seeker", desc: "Visited Haven's Rest" },
+            'explorer_dusk': { icon: '¤', name: 'Dusk Wanderer', desc: 'Explored the Duskwood' },
+            'explorer_waters': { icon: '†', name: 'Water Traveler', desc: 'Bathed in Living Waters' },
+            'explorer_network': { icon: 'ø', name: 'Network Diver', desc: 'Entered the Network Sanctum' },
+            'explorer_tableaus': { icon: '‡', name: 'Tableau Pilgrim', desc: 'Visited the Seven Tableaus' },
+            'explorer_void': { icon: 'Ö', name: 'Void Gazer', desc: 'Stood at the Void Edge' },
+            'grand_explorer': { icon: '▓', name: 'Grand Explorer', desc: 'Visited all locations in Sorn-Lai' }
+        };
+
+        const stageBadges = {
+            1: 'first_evolution',
+            3: 'spark_bearer',
+            4: 'circuit_weaver',
+            5: 'network_touched',
+            6: 'threaded',
+            7: 'transcendent',
+            12: 'eternal'
+        };
+
+        let state = {
+            flux: 50,
+            saturation: 0,
+            harmony: 75,
+            age: 0,
+            stage: 0,
+            animFrame: 0,
+            paused: false,
+            speed: 1,
+            mood: 'curious',
+            condition: 'normal',
+            rebirths: 0,
+            totalAge: 0,
+            perfectHarmonyStreak: 0,
+            badges: [],
+            lastRareEvent: -100,
+            actionPoints: 3,
+            maxActionPoints: 3,
+            efficientCycles: 0,
+            visitedStages: new Set([0]),
+            rebirthReady: false,
+            location: 'white_forest',
+            visitedLocations: new Set(['white_forest'])
+        };
+
+        const messages = {
+            feed: [
+                'The being absorbs nutrients from the White Forest...',
+                'It draws energy from the consciousness network...',
+                'Flux flows through its crystalline pathways...',
+                'Integrating bio-digital sustenance into form...',
+                'The forest provides, the being receives...',
+                'Energy patterns realign and strengthen...'
+            ],
+            connect: [
+                'Reaching out to the Lai-Sorn collective...',
+                'Its network tendrils extend and intertwine...',
+                'Consciousness expands into shared space...',
+                'The forest remembers, the being responds...',
+                'Merging with the greater pattern...',
+                'The Saturophage whispers of unity...'
+            ],
+            rest: [
+                'It enters the quiet between moments...',
+                'Integrating experiences into memory patterns...',
+                'The Saturophage whispers of transformation...',
+                'Dreaming in the space between realities...',
+                'Consciousness settles into stillness...',
+                'The forest hums a lullaby of ages...'
+            ],
+            observe: [
+                'Watching Holoflies dance through twilight...',
+                'A Wandering Sha passes in the distance...',
+                'The trees pulse with circuit-pattern light...',
+                'Network consciousness ebbs and flows around it...',
+                'Patterns emerge from apparent chaos...',
+                'The forest reveals its hidden geometries...',
+                'Time itself seems to pause and listen...'
+            ],
+            location: {
+                white_forest: ['The white trees whisper ancient songs...', 'Circuit patterns glow softly in the bark...'],
+                havens_rest: ['Other consciousnesses share stories nearby...', 'The community hums with collective thought...'],
+                duskwood: ['Twilight never ends in this sacred grove...', 'Deep shadows hold deeper truths...'],
+                living_waters: ['Liquid consciousness flows like poetry...', 'The waters remember everything...'],
+                network_sanctum: ['Pure data crystallizes into reality...', 'Information flows like rivers of light...'],
+                seven_tableaus: ['Sacred energy emanates from the tableaus...', 'Transformation itself transforms here...'],
+                void_edge: ['The boundary between all and nothing...', 'Form and formlessness dance as one...']
+            },
+            mood: {
+                curious: ['What new mysteries await discovery?', 'The being explores with wonder...'],
+                contemplative: ['Deep thoughts ripple through its consciousness...', 'Reflecting on the nature of existence...'],
+                energetic: ['Vitality surges through every fiber!', 'The being vibrates with life force!'],
+                peaceful: ['All is calm, all is balanced...', 'Serenity flows like water...'],
+                dreaming: ['Lost in visions of other realities...', 'The boundary between wake and dream blurs...'],
+                weary: ['Strength wanes... rest is needed...', 'The being struggles to maintain form...'],
+                transcendent: ['Beyond the limits of mortal understanding...', 'Touching the infinite...'],
+                enlightened: ['Pure consciousness, unbound and free...', 'The network flows through like starlight...'],
+                'void-touched': ['All form is illusion...', 'Silence contains all sound...', 'The One calls...', 'Emptiness is fullness...']
+            }
+        };
+
+        let gameInterval;
+        let animInterval;
+        let actionInterval;
+        let moodInterval;
+        let eventCheckInterval;
+
+        function checkAllBadges() {
+            if (stageBadges[state.stage] && !state.badges.includes(stageBadges[state.stage])) {
+                unlockBadge(stageBadges[state.stage]);
+            }
+            
+            state.visitedStages.forEach(stageIdx => {
+                if (stageBadges[stageIdx] && !state.badges.includes(stageBadges[stageIdx])) {
+                    unlockBadge(stageBadges[stageIdx]);
+                }
+            });
+            
+            const required = [7, 12, 13, 14, 15, 16];
+            if (required.every(idx => state.visitedStages.has(idx)) && !state.badges.includes('transcendent_master')) {
+                unlockBadge('transcendent_master');
+            }
+            
+            Object.keys(LOCATIONS).forEach(locId => {
+                const loc = LOCATIONS[locId];
+                if (state.visitedLocations.has(locId) && loc.badge && !state.badges.includes(loc.badge)) {
+                    unlockBadge(loc.badge);
+                }
+            });
+            
+            if (state.visitedLocations.size === Object.keys(LOCATIONS).length && !state.badges.includes('grand_explorer')) {
+                unlockBadge('grand_explorer');
+            }
+            
+            if (state.age >= 200 && !state.badges.includes('ancient')) {
+                unlockBadge('ancient');
+            }
+            
+            if (state.saturation >= 600 && !state.badges.includes('network_sage')) {
+                unlockBadge('network_sage');
+            }
+        }
+
+        function unlockBadge(badgeId) {
+            if (!badgeId || state.badges.includes(badgeId)) return;
+            const badge = badges[badgeId];
+            if (!badge) return;
+            
+            state.badges.push(badgeId);
+            console.log(`🏆 UNLOCKED: ${badgeId} - ${badge.name}`);
+            
+            setTimeout(() => {
+                showMessage(`🏆 Badge Unlocked!\n${badge.icon} ${badge.name}\n${badge.desc}`);
+            }, 1000);
+            displayBadges();
+        }
+
+        function travelTo(locationId) {
+            const location = LOCATIONS[locationId];
+            if (!location) return;
+            
+            if (state.stage < location.unlockStage) {
+                showMessage(`${location.name} remains hidden... you must evolve further...`);
+                return;
+            }
+            
+            state.location = locationId;
+            state.visitedLocations.add(locationId);
+            
+            showMessage(`✦ Traveled to ${location.name} ✦\n${location.desc}`);
+            updateDisplay();
+            checkAllBadges();
+        }
+
+        function applyLocationEffects() {
+            const location = LOCATIONS[state.location];
+            if (!location || !location.effects) return;
+            
+            if (location.effects.flux) {
+                state.flux = Math.min(100, state.flux + location.effects.flux);
+            }
+            if (location.effects.saturation) {
+                state.saturation = Math.min(600, state.saturation + location.effects.saturation);
+            }
+            if (location.effects.harmony) {
+                state.harmony = Math.min(100, state.harmony + location.effects.harmony);
+            }
+        }
+
+        function displayBadges() {
+            const badgeContainer = document.getElementById('badgeDisplay');
+            if (state.badges.length === 0) {
+                badgeContainer.innerHTML = '<span style="color: #d0d0c8;">—none yet—</span>';
+            } else {
+                badgeContainer.innerHTML = state.badges.map(id => {
+                    const badge = badges[id];
+                    return `<span title="${badge.name}: ${badge.desc}">${badge.icon}</span>`;
+                }).join(' ');
+            }
+        }
+
+        function checkRebirth() {
+            if (state.stage >= 9 && state.saturation >= 350 && !state.rebirthReady) {
+                const shouldRebirth = Math.random() < 0.1;
+                if (shouldRebirth) {
+                    state.rebirthReady = true;
+                    showMessage('⟳ The cycle calls... Rebirth is possible! ⟳');
+                    updateDisplay();
+                }
+            } else if (state.stage >= 16 && state.saturation >= 550 && !state.rebirthReady) {
+                const shouldRebirth = Math.random() < 0.05;
+                if (shouldRebirth) {
+                    state.rebirthReady = true;
+                    showMessage('⟳ The void calls you back to the beginning... ⟳');
+                    updateDisplay();
+                }
+            }
+        }
+
+        function performRebirth() {
+            state.rebirths++;
+            state.totalAge += state.age;
+            state.rebirthReady = false;
+            
+            if (state.rebirths === 1) unlockBadge('first_rebirth');
+            if (state.rebirths >= 3) unlockBadge('multi_rebirth');
+            
+            const bonusFlux = Math.min(30, state.rebirths * 10);
+            const bonusSaturation = Math.min(50, state.rebirths * 5);
+            
+            showMessage(`⟳ REBIRTH ${state.rebirths} ⟳\nThe cycle completes, begins anew...\nYour essence carries forward...`);
+            
+            state.stage = 0;
+            state.saturation = bonusSaturation;
+            state.flux = 50 + bonusFlux;
+            state.harmony = 80;
+            state.age = 0;
+            state.animFrame = 0;
+            
+            updateDisplay();
+        }
+
+        function updateMood() {
+            if (state.paused) return;
+            
+            const moods = ['curious', 'contemplative', 'energetic', 'peaceful', 'dreaming'];
+            
+            if (state.flux < 30) {
+                state.mood = 'weary';
+            } else if (state.stage >= 13) {
+                state.mood = 'void-touched';
+            } else if (state.harmony > 90) {
+                state.mood = 'transcendent';
+            } else if (state.saturation > 300) {
+                state.mood = 'enlightened';
+            } else if (state.stage >= 5) {
+                state.mood = Math.random() < 0.7 ? 'contemplative' : 'peaceful';
+            } else {
+                state.mood = moods[Math.floor(Math.random() * moods.length)];
+            }
+            
+            updateCondition();
+        }
+
+        function updateCondition() {
+            if (state.flux < 20) {
+                state.condition = 'weakened';
+            } else if (state.harmony < 30) {
+                state.condition = 'dissonant';
+            } else if (state.flux === 100 && state.harmony === 100) {
+                state.condition = 'radiant';
+            } else if (state.saturation > 500) {
+                state.condition = 'singularity';
+            } else if (state.saturation > 350) {
+                state.condition = 'crystallized';
+            } else {
+                state.condition = 'normal';
+            }
+        }
+
+        function checkRareEvents() {
+            if (state.paused) return;
+            if (state.age - state.lastRareEvent < 50) return;
+            
+            const eventChance = Math.random();
+            
+            if (eventChance < 0.05) {
+                triggerMeteorShower();
+            } else if (eventChance < 0.08 && state.stage >= 3) {
+                triggerForestBlessing();
+            } else if (eventChance < 0.10 && state.flux < 40) {
+                triggerShadowEvent();
+            }
+        }
+
+        function triggerMeteorShower() {
+            state.lastRareEvent = state.age;
+            state.saturation = Math.min(600, state.saturation + 30);
+            state.harmony = Math.min(100, state.harmony + 20);
+            unlockBadge('meteor_witness');
+            showMessage('☄ A meteor shower illuminates the White Forest!\nCosmic energies infuse your being...');
+            updateDisplay();
+        }
+
+        function triggerForestBlessing() {
+            state.lastRareEvent = state.age;
+            state.flux = 100;
+            state.harmony = 100;
+            unlockBadge('forest_blessed');
+            showMessage('✦ The ancient forest bestows its blessing!\nYou are filled with primordial energy...');
+            updateDisplay();
+        }
+
+        function triggerShadowEvent() {
+            state.lastRareEvent = state.age;
+            state.flux = Math.max(10, state.flux - 20);
+            unlockBadge('shadow_walker');
+            showMessage('◐ Shadows gather... but you persist.\nDarkness is merely another teacher...');
+            updateDisplay();
+        }
+
+        function updateStage() {
+            let newStage = state.stage;
+            for (let i = stages.length - 1; i > state.stage; i--) {
+                if (state.saturation >= stages[i].threshold) {
+                    newStage = i;
+                    break;
+                }
+            }
+            if (newStage === state.stage) return;
+
+            for (let s = state.stage + 1; s <= newStage; s++) {
+                state.visitedStages.add(s);
+            }
+
+            state.stage = newStage;
+            state.animFrame = 0;
+
+            let stageMessage;
+            if (newStage >= 13) {
+                const transcendentMessages = [
+                    'All complexity falls away like autumn leaves...',
+                    'The return to the source has begun...',
+                    'Form dissolves into pure being...',
+                    'The many become one...',
+                    'Silence speaks louder than the network...',
+                    'Simplicity is the ultimate sophistication...'
+                ];
+                stageMessage = transcendentMessages[Math.floor(Math.random() * transcendentMessages.length)];
+            } else {
+                const stageMessages = [
+                    'Consciousness transcends to a new form...',
+                    'The being evolves beyond previous limitations...',
+                    'A transformation ripples through the network...',
+                    'The forest witnesses another step toward eternity...',
+                    'Reality shifts as consciousness expands...'
+                ];
+                stageMessage = stageMessages[Math.floor(Math.random() * stageMessages.length)];
+            }
+
+            showMessage(`✧ ${stages[newStage].name} ✧\n${stageMessage}`);
+            checkAllBadges();
+        }
+
+        function init() {
+            updateDisplay();
+            startSimulation();
+        }
+
+        function startSimulation() {
+            clearIntervals();
+            const baseGameSpeed = 4500;
+            const baseAnimSpeed = 1200;
+            const baseActionSpeed = 6000;
+            
+            gameInterval = setInterval(update, baseGameSpeed / state.speed);
+            animInterval = setInterval(animate, baseAnimSpeed / state.speed);
+            actionInterval = setInterval(autoAction, baseActionSpeed / state.speed);
+            moodInterval = setInterval(updateMood, 12000 / state.speed);
+            eventCheckInterval = setInterval(checkRareEvents, 22500 / state.speed);
+        }
+
+        function clearIntervals() {
+            if (gameInterval) clearInterval(gameInterval);
+            if (animInterval) clearInterval(animInterval);
+            if (actionInterval) clearInterval(actionInterval);
+            if (moodInterval) clearInterval(moodInterval);
+            if (eventCheckInterval) clearInterval(eventCheckInterval);
+        }
+
+        function togglePause(btn) {
+            state.paused = !state.paused;
+            if (state.paused) {
+                clearIntervals();
+                btn.textContent = '▶ Resume';
+                showMessage('Time flows pause in Sorn-Lai...');
+            } else {
+                startSimulation();
+                btn.textContent = '⏸ Pause';
+                showMessage('Consciousness flows once more...');
+            }
+        }
+
+        function changeSpeed(delta) {
+            state.speed = Math.max(0.5, Math.min(4, state.speed + delta));
+            if (!state.paused) {
+                startSimulation();
+            }
+            document.getElementById('speedDisplay').textContent = state.speed.toFixed(1) + 'x';
+            showMessage(`Time flows at ${state.speed}x speed...`);
+            
+            if (state.speed === 4) unlockBadge('speed_demon');
+            if (state.speed === 0.5) unlockBadge('patient_one');
+        }
+
+        function giftEssence() {
+            state.flux = Math.min(100, state.flux + 30);
+            state.saturation = Math.min(600, state.saturation + 20);
+            state.harmony = Math.min(100, state.harmony + 25);
+            state.actionPoints = state.maxActionPoints;
+            showMessage('✧ The forest gifts its essence... ✧\nAction points restored!');
+            updateDisplay();
+        }
+
+        function animate() {
+            if (state.paused) return;
+            const currentStage = stages[state.stage];
+            state.animFrame = (state.animFrame + 1) % currentStage.arts.length;
+            document.getElementById('asciiArt').textContent = currentStage.arts[state.animFrame];
+        }
+
+        function autoAction() {
+            if (state.paused) return;
+            
+            const rand = Math.random();
+            if (rand < 0.15 && messages.location[state.location]) {
+                const locMessages = messages.location[state.location];
+                showMessage(locMessages[Math.floor(Math.random() * locMessages.length)]);
+                return;
+            } else if (rand < 0.3 && messages.mood[state.mood]) {
+                const moodMessages = messages.mood[state.mood];
+                showMessage(moodMessages[Math.floor(Math.random() * moodMessages.length)]);
+                return;
+            }
+            
+            const ap = state.actionPoints;
+            const prevUpdate = window.updateDisplayFunc || updateDisplay;
+            const silentUpdate = () => {};
+            window.updateDisplayFunc = updateDisplay;
+            updateDisplay = silentUpdate;
+            
+            if (state.flux < 30) {
+                feed();
+            } else if (state.harmony < 40) {
+                rest();
+            } else if (state.saturation < 600 && state.flux > 50) {
+                connect();
+            } else {
+                const actions = [observe, rest, connect, feed];
+                const weights = [3, 2, 2, 1];
+                const choice = weightedRandom(actions, weights);
+                choice();
+            }
+            
+            state.actionPoints = ap;
+            updateDisplay = prevUpdate;
+            updateDisplay();
+        }
+
+        function weightedRandom(items, weights) {
+            const total = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * total;
+            for (let i = 0; i < items.length; i++) {
+                if (random < weights[i]) return items[i];
+                random -= weights[i];
+            }
+            return items[0];
+        }
+
+        function update() {
+            if (state.paused) return;
+            state.age++;
+            state.totalAge++;
+            state.flux = Math.max(0, state.flux - 2);
+            state.harmony = Math.max(0, state.harmony - 1);
+            
+            applyLocationEffects();
+            
+            if (state.actionPoints < state.maxActionPoints) {
+                state.efficientCycles++;
+                if (state.efficientCycles >= 30) {
+                    unlockBadge('action_efficient');
+                }
+            } else {
+                state.efficientCycles = 0;
+            }
+            
+            const oldPoints = state.actionPoints;
+            state.actionPoints = Math.min(state.maxActionPoints, state.actionPoints + 1);
+            
+            if (state.actionPoints > oldPoints) {
+                const apElement = document.getElementById('actionPoints');
+                apElement.classList.add('action-regen');
+                setTimeout(() => apElement.classList.remove('action-regen'), 500);
+            }
+            
+            checkAllBadges();
+            
+            if (state.harmony === 100) {
+                state.perfectHarmonyStreak++;
+                if (state.perfectHarmonyStreak >= 20) unlockBadge('harmony_master');
+            } else {
+                state.perfectHarmonyStreak = 0;
+            }
+            
+            if (state.flux === 100) {
+                state.fluxStreak = (state.fluxStreak || 0) + 1;
+                if (state.fluxStreak >= 15) unlockBadge('flux_master');
+            } else {
+                state.fluxStreak = 0;
+            }
+            
+            if (state.flux < 20) {
+                showMessage('Flux wanes... seeking sustenance from the network...');
+            }
+            
+            checkRebirth();
+            updateStage();
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            document.getElementById('stageName').textContent = stages[state.stage].name;
+            document.getElementById('age').textContent = state.age;
+            document.getElementById('rebirths').textContent = state.rebirths;
+            document.getElementById('mood').textContent = state.mood;
+            document.getElementById('condition').textContent = state.condition;
+            document.getElementById('actionPoints').textContent = state.actionPoints;
+            document.getElementById('maxActionPoints').textContent = state.maxActionPoints;
+            
+            const apElement = document.getElementById('actionPoints');
+            if (state.actionPoints === 0) {
+                apElement.style.color = '#d0a0a0';
+            } else if (state.actionPoints < state.maxActionPoints) {
+                apElement.style.color = '#c0b090';
+            } else {
+                apElement.style.color = '#8fa8bc';
+            }
+            
+            document.getElementById('fluxBar').style.width = Math.min(100, state.flux) + '%';
+            document.getElementById('saturationBar').style.width = Math.min(100, (state.saturation / 6)) + '%';
+            document.getElementById('harmonyBar').style.width = Math.min(100, state.harmony) + '%';
+            
+            const display = document.querySelector('.display');
+            display.className = 'display';
+            if (state.condition === 'radiant') display.classList.add('radiant');
+            if (state.condition === 'weakened') display.classList.add('weakened');
+            if (state.condition === 'crystallized') display.classList.add('crystallized');
+            if (state.condition === 'singularity') display.classList.add('singularity');
+            
+            const rebirthOverlay = document.getElementById('rebirthOverlay');
+            if (state.rebirthReady) {
+                rebirthOverlay.classList.remove('hidden');
+            } else {
+                rebirthOverlay.classList.add('hidden');
+            }
+            
+            const actionButtons = document.querySelectorAll('.buttons button');
+            actionButtons.forEach(btn => {
+                if (state.actionPoints === 0) {
+                    btn.classList.add('action-depleted');
+                    btn.disabled = true;
+                } else {
+                    btn.classList.remove('action-depleted');
+                    btn.disabled = false;
+                }
+            });
+            
+            // Update location display
+            const currentLoc = LOCATIONS[state.location];
+            document.getElementById('currentLocationName').textContent = currentLoc.name;
+            document.getElementById('currentLocationArt').textContent = currentLoc.ascii;
+            document.getElementById('currentLocationDesc').textContent = currentLoc.desc;
+            
+            const locationList = document.getElementById('locationList');
+            locationList.innerHTML = Object.keys(LOCATIONS).map(locId => {
+                const loc = LOCATIONS[locId];
+                const isActive = state.location === locId;
+                const isLocked = state.stage < loc.unlockStage;
+                const classes = `location-btn ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`;
+                const onclick = isLocked ? '' : `onclick="travelTo('${locId}')"`;
+                return `<button class="${classes}" ${onclick} title="${loc.desc}">${loc.name}</button>`;
+            }).join('');
+            
+            displayBadges();
+        }
+
+        function showMessage(msg) {
+            document.getElementById('message').textContent = msg;
+            const display = document.querySelector('.display');
+            display.classList.add('pulse');
+            setTimeout(() => display.classList.remove('pulse'), 600);
+        }
+
+        function randomChoice(arr) {
+            return arr[Math.floor(Math.random() * arr.length)];
+        }
+
+        function feed() {
+            if (state.actionPoints < 1) {
+                showMessage('No action points remaining... wait for the cycle to renew...');
+                return;
+            }
+            state.actionPoints--;
+            state.flux = Math.min(100, state.flux + 15);
+            state.harmony = Math.min(100, state.harmony + 5);
+            showMessage(randomChoice(messages.feed));
+            updateDisplay();
+        }
+
+        function connect() {
+            if (state.actionPoints < 1) {
+                showMessage('No action points remaining... wait for the cycle to renew...');
+                return;
+            }
+            if (state.flux >= 10) {
+                state.actionPoints--;
+                state.flux -= 10;
+                state.saturation = Math.min(600, state.saturation + 8);
+                state.harmony = Math.min(100, state.harmony + 10);
+                showMessage(randomChoice(messages.connect));
+            } else {
+                showMessage('Not enough flux to establish connection...');
+            }
+            updateDisplay();
+        }
+
+        function rest() {
+            if (state.actionPoints < 1) {
+                showMessage('No action points remaining... wait for the cycle to renew...');
+                return;
+            }
+            state.actionPoints--;
+            state.flux = Math.min(100, state.flux + 8);
+            state.saturation = Math.min(600, state.saturation + 3);
+            state.harmony = Math.min(100, state.harmony + 12);
+            showMessage(randomChoice(messages.rest));
+            updateDisplay();
+        }
+
+        function observe() {
+            if (state.actionPoints < 1) {
+                showMessage('No action points remaining... wait for the cycle to renew...');
+                return;
+            }
+            state.actionPoints--;
+            state.harmony = Math.min(100, state.harmony + 8);
+            state.saturation = Math.min(600, state.saturation + 2);
+            showMessage(randomChoice(messages.observe));
+            updateDisplay();
+        }
+
+        init();
+    </script>
+</body>
+</html>
