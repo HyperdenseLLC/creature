@@ -1530,6 +1530,162 @@
             void_edge: { x: 18, y: 9 }
         };
 
+        const BASE_RESOURCE_DRIFT = { flux: -2, harmony: -1, saturation: 0 };
+
+        const MOOD_RESOURCE_MODIFIERS = {
+            curious: { flux: 1 },
+            contemplative: { harmony: 1 },
+            energetic: { flux: 2, saturation: 1 },
+            peaceful: { harmony: 2 },
+            dreaming: { harmony: 1, saturation: 1 },
+            weary: { flux: -3, harmony: -1 },
+            enlightened: { harmony: 2, saturation: 2 },
+            transcendent: { harmony: 3, saturation: 1 },
+            'void-touched': { flux: -1, saturation: 2 }
+        };
+
+        const CONDITION_RESOURCE_MODIFIERS = {
+            normal: { flux: 0, harmony: 0, saturation: 0 },
+            weakened: { flux: -2, harmony: -1 },
+            dissonant: { harmony: -3 },
+            radiant: { flux: 2, harmony: 3, saturation: 2 },
+            crystallized: { harmony: 1, saturation: 1 },
+            singularity: { flux: -1, harmony: 2, saturation: 3 }
+        };
+
+        const STAGE_RESOURCE_MODIFIERS = [
+            { min: 0, max: 2, flux: -1, harmony: -1 },
+            { min: 3, max: 5, flux: 0, harmony: 1, saturation: 1 },
+            { min: 6, max: 9, flux: 1, harmony: 1, saturation: 2 },
+            { min: 10, max: 12, flux: 1, harmony: 2, saturation: 2 },
+            { min: 13, max: Infinity, flux: -1, harmony: 3, saturation: 1 }
+        ];
+
+        const ITEM_RESOURCE_MODIFIERS = {
+            forest_spore: { flux: 1, saturation: 1, maxStacks: 4 },
+            network_shard: { saturation: 2 },
+            dream_resin: { harmony: 1 },
+            echo_crystal: { saturation: 1 },
+            harmony_thread: { harmony: 2 },
+            sanctum_key: { saturation: 1 },
+            void_dust: { flux: -1, saturation: 2 },
+            water_pearl: { harmony: 1, saturation: 1 },
+            white_bloom: { harmony: 2 },
+            haven_cache: { flux: 1, harmony: 1 },
+            dusk_totem: { flux: 2 },
+            water_mirror: { harmony: 1, saturation: 1 },
+            sanctum_plume: { saturation: 2, harmony: 1 },
+            tableau_reliquary: { flux: 1, saturation: 1 },
+            tableau_script: { harmony: 2 },
+            void_shard: { flux: -2, saturation: 3 },
+            meteor_glass: { saturation: 2 },
+            aurora_lens: { harmony: 1, saturation: 1 },
+            forest_blossom: { harmony: 3 },
+            shadow_cinder: { flux: 1, harmony: -2 },
+            memory_spool: { harmony: 1, saturation: 1 },
+            void_anchor: { flux: 1, saturation: 2 }
+        };
+
+        const MAX_ITEM_STACK_INFLUENCE = 3;
+
+        function addResourceModifiers(target, source = {}) {
+            if (!target || !source) return;
+            if (typeof source.flux === 'number') target.flux += source.flux;
+            if (typeof source.harmony === 'number') target.harmony += source.harmony;
+            if (typeof source.saturation === 'number') target.saturation += source.saturation;
+        }
+
+        function deriveLocationTraitModifiers(location) {
+            const modifiers = { flux: 0, harmony: 0, saturation: 0 };
+            if (!location || !Array.isArray(location.features)) {
+                return modifiers;
+            }
+
+            location.features.forEach(feature => {
+                const text = feature.toLowerCase();
+                if (text.includes('flux')) modifiers.flux += 1;
+                if (text.includes('glyph') || text.includes('root')) modifiers.flux += 1;
+                if (text.includes('harmony')) modifiers.harmony += 1;
+                if (text.includes('song') || text.includes('memory') || text.includes('communal')) modifiers.harmony += 1;
+                if (text.includes('saturation')) modifiers.saturation += 2;
+                if (text.includes('current') || text.includes('flow') || text.includes('liquid')) modifiers.saturation += 1;
+                if (text.includes('void') || text.includes('shadow')) {
+                    modifiers.flux -= 1;
+                    modifiers.harmony -= 1;
+                    modifiers.saturation += 1;
+                }
+            });
+
+            return modifiers;
+        }
+
+        function getStageResourceModifiers(stage) {
+            for (const band of STAGE_RESOURCE_MODIFIERS) {
+                if (stage >= band.min && stage <= band.max) {
+                    return {
+                        flux: band.flux || 0,
+                        harmony: band.harmony || 0,
+                        saturation: band.saturation || 0
+                    };
+                }
+            }
+            return { flux: 0, harmony: 0, saturation: 0 };
+        }
+
+        function getMoodResourceModifiers(mood) {
+            return MOOD_RESOURCE_MODIFIERS[mood] || { flux: 0, harmony: 0, saturation: 0 };
+        }
+
+        function getConditionResourceModifiers(condition) {
+            return CONDITION_RESOURCE_MODIFIERS[condition] || { flux: 0, harmony: 0, saturation: 0 };
+        }
+
+        function getInventoryResourceModifiers() {
+            const totals = { flux: 0, harmony: 0, saturation: 0 };
+            if (!state.inventory) return totals;
+
+            Object.entries(state.inventory).forEach(([itemId, count]) => {
+                const modifier = ITEM_RESOURCE_MODIFIERS[itemId];
+                if (!modifier || !count) return;
+                const limit = modifier.maxStacks || MAX_ITEM_STACK_INFLUENCE;
+                const stacks = Math.min(count, limit);
+                if (modifier.flux) totals.flux += modifier.flux * stacks;
+                if (modifier.harmony) totals.harmony += modifier.harmony * stacks;
+                if (modifier.saturation) totals.saturation += modifier.saturation * stacks;
+            });
+
+            return totals;
+        }
+
+        function calculateResourceDrift() {
+            const drift = { ...BASE_RESOURCE_DRIFT };
+
+            const location = LOCATIONS[state.location];
+            if (location && location.effects) {
+                addResourceModifiers(drift, location.effects);
+                addResourceModifiers(drift, deriveLocationTraitModifiers(location));
+            }
+
+            addResourceModifiers(drift, getStageResourceModifiers(state.stage));
+            addResourceModifiers(drift, getMoodResourceModifiers(state.mood));
+            addResourceModifiers(drift, getConditionResourceModifiers(state.condition));
+            addResourceModifiers(drift, getInventoryResourceModifiers());
+
+            if (state.flux < 30) drift.flux += 1;
+            if (state.flux < 20) drift.flux += 1;
+            if (state.flux > 85) drift.flux -= 2;
+
+            if (state.harmony < 40) drift.harmony += 1;
+            if (state.harmony > 95) drift.harmony -= 2;
+
+            if (state.saturation < 120) drift.saturation += 1;
+            if (state.saturation < 60) drift.saturation += 1;
+            if (state.saturation > 400) drift.saturation -= 1;
+            if (state.saturation > 520) drift.saturation -= 2;
+
+            return drift;
+        }
+
         const stages = [
             {
                 name: 'Dormant Egg',
@@ -2545,21 +2701,6 @@
             scheduleNextTravel();
         }
 
-        function applyLocationEffects() {
-            const location = LOCATIONS[state.location];
-            if (!location || !location.effects) return;
-
-            if (typeof location.effects.flux === 'number') {
-                state.flux = clamp(state.flux + location.effects.flux, 0, 100);
-            }
-            if (typeof location.effects.saturation === 'number') {
-                state.saturation = clamp(state.saturation + location.effects.saturation, 0, 600);
-            }
-            if (typeof location.effects.harmony === 'number') {
-                state.harmony = clamp(state.harmony + location.effects.harmony, 0, 100);
-            }
-        }
-
         function displayBadges() {
             const badgeContainer = document.getElementById('badgeDisplay');
             if (state.badges.length === 0) {
@@ -3048,10 +3189,10 @@
             state.age++;
             state.totalAge++;
             state.stageCycleCount++;
-            state.flux = Math.max(0, state.flux - 2);
-            state.harmony = Math.max(0, state.harmony - 1);
-
-            applyLocationEffects();
+            const resourceDrift = calculateResourceDrift();
+            state.flux = clamp(state.flux + resourceDrift.flux, 0, 100);
+            state.harmony = clamp(state.harmony + resourceDrift.harmony, 0, 100);
+            state.saturation = clamp(state.saturation + resourceDrift.saturation, 0, 600);
 
             if (state.nextLocationDelay > 0) {
                 state.locationTimer++;
