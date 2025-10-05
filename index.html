@@ -1501,12 +1501,13 @@
         function startSimulation() {
             if (state.paused) return;
             clearIntervals();
-            const baseGameSpeed = 4500;
+            const baseGameSpeed = 6000;
             const baseAnimSpeed = 1200;
             const baseActionSpeed = 6000;
 
             gameInterval = setInterval(update, baseGameSpeed / state.speed);
-            animInterval = setInterval(animate, baseAnimSpeed / state.speed);
+            const animationSpeedMultiplier = Math.min(Math.max(state.speed, 1), 2);
+            animInterval = setInterval(animate, baseAnimSpeed / animationSpeedMultiplier);
             actionInterval = setInterval(autoAction, baseActionSpeed / state.speed);
             moodInterval = setInterval(updateMood, 12000 / state.speed);
             eventCheckInterval = setInterval(checkRareEvents, 22500 / state.speed);
