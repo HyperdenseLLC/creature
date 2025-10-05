@@ -318,10 +318,12 @@
             left: 14px;
             right: 14px;
             bottom: 14px;
-            display: flex;
-            flex-wrap: nowrap;
+            display: grid;
+            grid-template-columns: repeat(2, auto);
             justify-content: center;
-            gap: 6px;
+            align-content: center;
+            column-gap: 8px;
+            row-gap: 6px;
             pointer-events: none;
         }
         .creature-metric {
