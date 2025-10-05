@@ -355,6 +355,9 @@
             background: #e8e8e0;
             transform: none;
         }
+        .location-btn:disabled {
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body>
@@ -420,7 +423,7 @@
             </div>
             
             <div class="controls">
-                <button onclick="togglePause(this)">⏸ Pause</button>
+                <button id="pauseButton" onclick="togglePause()">⏸ Pause</button>
                 <button onclick="changeSpeed(-0.5)">⏪ Slower</button>
                 <button onclick="changeSpeed(0.5)">⏩ Faster</button>
                 <button onclick="giftEssence()">✧ Gift</button>
@@ -428,10 +431,10 @@
                     Speed: <span id="speedDisplay">1.0x</span>
                 </button>
             </div>
-            
+
             <div style="text-align: center; font-size: 0.75em; color: #a0a098; margin-top: 10px;">
                 ∞ Self-evolving simulation ∞<br>
-                Actions regenerate each cycle • Explore locations
+                Actions regenerate each cycle • The being roams on its own
             </div>
             
             <div class="badge-container">
@@ -1110,6 +1113,7 @@
             stage: 0,
             animFrame: 0,
             paused: false,
+            pauseReason: null,
             speed: 1,
             mood: 'curious',
             condition: 'normal',
@@ -1124,7 +1128,9 @@
             visitedStages: new Set([0]),
             rebirthReady: false,
             location: 'white_forest',
-            visitedLocations: new Set(['white_forest'])
+            visitedLocations: new Set(['white_forest']),
+            locationTimer: 0,
+            nextLocationDelay: 0
         };
 
         const messages = {
@@ -1239,21 +1245,53 @@
             displayBadges();
         }
 
-        function travelTo(locationId) {
+        function travelTo(locationId, options = {}) {
+            const { auto = false } = options;
             const location = LOCATIONS[locationId];
             if (!location) return;
-            
+
             if (state.stage < location.unlockStage) {
                 showMessage(`${location.name} remains hidden... you must evolve further...`);
                 return;
             }
-            
+
             state.location = locationId;
             state.visitedLocations.add(locationId);
-            
-            showMessage(`✦ Traveled to ${location.name} ✦\n${location.desc}`);
+
+            const travelMessage = auto
+                ? `✦ The being drifts toward ${location.name} ✦\n${location.desc}`
+                : `✦ Traveled to ${location.name} ✦\n${location.desc}`;
+            showMessage(travelMessage);
             updateDisplay();
             checkAllBadges();
+        }
+
+        function scheduleNextTravel() {
+            const minDelay = 45;
+            const maxDelay = 90;
+            state.locationTimer = 0;
+            state.nextLocationDelay = minDelay + Math.floor(Math.random() * (maxDelay - minDelay + 1));
+        }
+
+        function autoTravel() {
+            const unlocked = Object.entries(LOCATIONS)
+                .filter(([_, loc]) => state.stage >= loc.unlockStage)
+                .map(([id]) => id);
+
+            if (unlocked.length <= 1) {
+                scheduleNextTravel();
+                return;
+            }
+
+            const possibleDestinations = unlocked.filter(id => id !== state.location);
+            if (possibleDestinations.length === 0) {
+                scheduleNextTravel();
+                return;
+            }
+
+            const destination = randomChoice(possibleDestinations);
+            travelTo(destination, { auto: true });
+            scheduleNextTravel();
         }
 
         function applyLocationEffects() {
@@ -1289,6 +1327,7 @@
                 if (shouldRebirth) {
                     state.rebirthReady = true;
                     showMessage('⟳ The cycle calls... Rebirth is possible! ⟳');
+                    setPaused(true, 'rebirth');
                     updateDisplay();
                 }
             } else if (state.stage >= 16 && state.saturation >= 550 && !state.rebirthReady) {
@@ -1296,6 +1335,7 @@
                 if (shouldRebirth) {
                     state.rebirthReady = true;
                     showMessage('⟳ The void calls you back to the beginning... ⟳');
+                    setPaused(true, 'rebirth');
                     updateDisplay();
                 }
             }
@@ -1311,17 +1351,22 @@
             
             const bonusFlux = Math.min(30, state.rebirths * 10);
             const bonusSaturation = Math.min(50, state.rebirths * 5);
-            
+
             showMessage(`⟳ REBIRTH ${state.rebirths} ⟳\nThe cycle completes, begins anew...\nYour essence carries forward...`);
-            
+
             state.stage = 0;
             state.saturation = bonusSaturation;
             state.flux = 50 + bonusFlux;
             state.harmony = 80;
             state.age = 0;
             state.animFrame = 0;
-            
+            state.location = 'white_forest';
+            state.visitedLocations.add('white_forest');
+
+            scheduleNextTravel();
+
             updateDisplay();
+            setPaused(false, 'rebirth');
         }
 
         function updateMood() {
@@ -1447,16 +1492,19 @@
         }
 
         function init() {
+            scheduleNextTravel();
             updateDisplay();
+            updatePauseButton();
             startSimulation();
         }
 
         function startSimulation() {
+            if (state.paused) return;
             clearIntervals();
             const baseGameSpeed = 4500;
             const baseAnimSpeed = 1200;
             const baseActionSpeed = 6000;
-            
+
             gameInterval = setInterval(update, baseGameSpeed / state.speed);
             animInterval = setInterval(animate, baseAnimSpeed / state.speed);
             actionInterval = setInterval(autoAction, baseActionSpeed / state.speed);
@@ -1472,15 +1520,54 @@
             if (eventCheckInterval) clearInterval(eventCheckInterval);
         }
 
-        function togglePause(btn) {
-            state.paused = !state.paused;
-            if (state.paused) {
-                clearIntervals();
-                btn.textContent = '▶ Resume';
+        function updatePauseButton() {
+            const pauseBtn = document.getElementById('pauseButton');
+            if (!pauseBtn) return;
+
+            pauseBtn.textContent = state.paused ? '▶ Resume' : '⏸ Pause';
+
+            if (state.pauseReason === 'rebirth' && state.rebirthReady) {
+                pauseBtn.disabled = true;
+                pauseBtn.title = 'The cycle awaits rebirth before time may flow again.';
+            } else {
+                pauseBtn.disabled = false;
+                pauseBtn.removeAttribute('title');
+            }
+        }
+
+        function setPaused(paused, reason = null) {
+            if (paused) {
+                if (!state.paused) {
+                    state.paused = true;
+                    clearIntervals();
+                }
+                if (reason) {
+                    state.pauseReason = reason;
+                }
+            } else {
+                if (!state.paused) return;
+                if (state.pauseReason && state.pauseReason !== reason) {
+                    updatePauseButton();
+                    return;
+                }
+                state.paused = false;
+                state.pauseReason = null;
+                startSimulation();
+            }
+
+            updatePauseButton();
+        }
+
+        function togglePause() {
+            if (!state.paused) {
+                setPaused(true, 'manual');
                 showMessage('Time flows pause in Sorn-Lai...');
             } else {
-                startSimulation();
-                btn.textContent = '⏸ Pause';
+                if (state.pauseReason === 'rebirth' && state.rebirthReady) {
+                    showMessage('Rebirth calls—accept the cycle to continue.');
+                    return;
+                }
+                setPaused(false, 'manual');
                 showMessage('Consciousness flows once more...');
             }
         }
@@ -1567,9 +1654,16 @@
             state.totalAge++;
             state.flux = Math.max(0, state.flux - 2);
             state.harmony = Math.max(0, state.harmony - 1);
-            
+
             applyLocationEffects();
-            
+
+            if (state.nextLocationDelay > 0) {
+                state.locationTimer++;
+                if (state.locationTimer >= state.nextLocationDelay) {
+                    autoTravel();
+                }
+            }
+
             if (state.actionPoints < state.maxActionPoints) {
                 state.efficientCycles++;
                 if (state.efficientCycles >= 30) {
@@ -1672,10 +1766,9 @@
                 const isActive = state.location === locId;
                 const isLocked = state.stage < loc.unlockStage;
                 const classes = `location-btn ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`;
-                const onclick = isLocked ? '' : `onclick="travelTo('${locId}')"`;
-                return `<button class="${classes}" ${onclick} title="${loc.desc}">${loc.name}</button>`;
+                return `<button class="${classes}" disabled title="${loc.desc}">${loc.name}</button>`;
             }).join('');
-            
+
             displayBadges();
         }
 
