@@ -214,7 +214,7 @@
         }
         .controls {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 8px;
             margin-bottom: 10px;
         }
@@ -406,11 +406,85 @@
             border: 2px solid #d0d0c8;
             border-radius: 12px;
             padding: 15px;
-            max-height: 220px;
+            max-height: 300px;
             overflow-y: auto;
             font-size: 0.85em;
             line-height: 1.4;
             color: #4a4a48;
+        }
+        @media (max-width: 960px) {
+            body {
+                padding: 16px;
+                align-items: stretch;
+            }
+            .panel-slider {
+                grid-template-columns: 1fr;
+            }
+            .panel.creature-panel,
+            .panel.locations-panel,
+            .panel.log-panel {
+                grid-column: 1;
+                justify-content: flex-start;
+            }
+            .container,
+            .location-container,
+            .log-container {
+                max-width: none;
+            }
+            .buttons {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .controls {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+            .log-entries {
+                max-height: 50vh;
+            }
+            .location-container {
+                padding: 24px;
+            }
+            .current-location-display {
+                padding: 20px;
+            }
+            .location-ascii {
+                font-size: clamp(12px, 4vw, 16px);
+                line-height: 1.2;
+            }
+            .location-list {
+                gap: 6px;
+            }
+            .location-btn {
+                font-size: 0.8em;
+                padding: 12px;
+            }
+        }
+        @media (max-width: 640px) {
+            body {
+                padding: 12px;
+            }
+            .panel-slider {
+                gap: 16px;
+            }
+            .container,
+            .location-container,
+            .log-container {
+                padding: 22px;
+            }
+            .display {
+                padding: 16px;
+            }
+            .ascii-art {
+                font-size: clamp(12px, 4vw, 18px);
+            }
+            .buttons {
+                grid-template-columns: 1fr;
+            }
+            .controls {
+                grid-template-columns: 1fr;
+            }
+            .log-entries {
+                max-height: 55vh;
+            }
         }
         .log-entry {
             padding: 10px;
