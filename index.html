@@ -2925,11 +2925,61 @@
         }
 
         function giftEssence() {
+            const inventoryEntries = Object.entries(state.inventory || {})
+                .filter(([, count]) => count > 0)
+                .sort(([idA], [idB]) => {
+                    const itemA = ITEMS[idA];
+                    const itemB = ITEMS[idB];
+                    if (!itemA || !itemB) return 0;
+                    return itemA.name.localeCompare(itemB.name);
+                });
+
+            if (inventoryEntries.length === 0) {
+                showMessage('No artifacts remain to offer as a gift.');
+                return;
+            }
+
+            const selectionPrompt = inventoryEntries
+                .map(([itemId, count], index) => {
+                    const item = ITEMS[itemId];
+                    const name = item ? item.name : itemId;
+                    const countLabel = count > 1 ? `x${count}` : 'x1';
+                    return `${index + 1}. ${name} (${countLabel})`;
+                })
+                .join('\n');
+
+            const choice = prompt(
+                'Select an item to gift (enter the number):\n' + selectionPrompt,
+                '1'
+            );
+
+            if (choice === null) {
+                showMessage('The forest waits for a worthy offering.');
+                return;
+            }
+
+            const selectedIndex = parseInt(choice.trim(), 10) - 1;
+            if (Number.isNaN(selectedIndex) || selectedIndex < 0 || selectedIndex >= inventoryEntries.length) {
+                showMessage('The spirits do not recognize that offering.');
+                return;
+            }
+
+            const [itemId, currentCount] = inventoryEntries[selectedIndex];
+            const item = ITEMS[itemId];
+
+            state.inventory[itemId] = Math.max(0, currentCount - 1);
+            if (state.inventory[itemId] === 0) {
+                delete state.inventory[itemId];
+            }
+            renderInventory();
+
             state.flux = Math.min(100, state.flux + 30);
             state.saturation = Math.min(600, state.saturation + 20);
             state.harmony = Math.min(100, state.harmony + 25);
             state.actionPoints = state.maxActionPoints;
-            showMessage('✧ The forest gifts its essence... ✧\nAction points restored!');
+
+            const itemName = item ? item.name : 'unknown artifact';
+            showMessage(`✧ Offering ${itemName} to the forest... ✧\nAction points restored!`);
             updateDisplay();
         }
 
