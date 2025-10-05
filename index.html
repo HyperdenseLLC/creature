@@ -18,27 +18,49 @@
             color: #2a2a2a;
             gap: 20px;
         }
-        .main-container {
-            display: flex;
+        .panel-slider {
+            display: grid;
             gap: 20px;
             max-width: 1200px;
             width: 100%;
+            grid-template-columns: minmax(0, 1fr) 320px;
+            align-items: start;
+        }
+        .panel {
+            display: flex;
+            align-items: stretch;
+        }
+        .panel.creature-panel {
+            grid-column: 1;
+            justify-content: flex-start;
+        }
+        .panel.locations-panel {
+            grid-column: 2;
+            justify-content: flex-start;
+        }
+        .panel.log-panel {
+            grid-column: 1 / -1;
+            justify-content: center;
         }
         .container {
             background: white;
             border: 3px solid #d0d0c8;
             border-radius: 20px;
             padding: 30px;
-            width: 500px;
+            max-width: 500px;
+            width: 100%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         .location-container {
             background: white;
             border: 3px solid #d0d0c8;
             border-radius: 20px;
             padding: 20px;
-            width: 300px;
+            max-width: 300px;
+            width: 100%;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         .title {
             text-align: center;
@@ -368,6 +390,7 @@
             width: 100%;
             max-width: 1200px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
         .log-title {
             text-align: center;
@@ -416,11 +439,59 @@
             color: #a0a098;
             font-style: italic;
         }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 20px 0 40px;
+                justify-content: center;
+            }
+            .panel-slider {
+                display: flex;
+                overflow-x: auto;
+                scroll-snap-type: x mandatory;
+                gap: 0;
+                width: 100%;
+                max-width: none;
+                align-items: stretch;
+                touch-action: pan-x;
+                overscroll-behavior-x: contain;
+            }
+            .panel-slider::-webkit-scrollbar {
+                display: none;
+            }
+            .panel-slider {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .panel {
+                flex: 0 0 100%;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
+                padding: 20px 16px 40px;
+                justify-content: center;
+                box-sizing: border-box;
+            }
+            .panel.creature-panel,
+            .panel.locations-panel,
+            .panel.log-panel {
+                grid-column: auto;
+            }
+            .panel > * {
+                width: min(100%, 500px);
+            }
+            .locations-panel > .location-container {
+                width: min(100%, 360px);
+            }
+            .log-panel > .log-container {
+                width: min(100%, 600px);
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="main-container">
-        <div class="container">
+    <div class="panel-slider">
+        <section class="panel creature-panel">
+            <div class="container">
             <div class="title">Sha-No-Ra</div>
             <div class="subtitle">guild research subject 00110100</div>
             
@@ -501,26 +572,31 @@
                     <span style="color: #d0d0c8;">—none yet—</span>
                 </div>
             </div>
-        </div>
-
-        <div class="location-container">
-            <div class="location-title">LOCATIONS</div>
-            
-            <div class="current-location-display">
-                <div class="location-name" id="currentLocationName">White Forest</div>
-                <div class="location-ascii" id="currentLocationArt"></div>
-                <div class="location-desc" id="currentLocationDesc">Pearl-barked trees hum with circuit-light.</div>
             </div>
-            
-        <div class="location-list" id="locationList"></div>
-        </div>
-    </div>
+        </section>
 
-    <div class="log-container">
-        <div class="log-title">EVENT LOG</div>
-        <div class="log-entries" id="eventLog">
-            <div class="log-empty">Awaiting the first stirring of history...</div>
-        </div>
+        <section class="panel locations-panel">
+            <div class="location-container">
+                <div class="location-title">LOCATIONS</div>
+
+                <div class="current-location-display">
+                    <div class="location-name" id="currentLocationName">White Forest</div>
+                    <div class="location-ascii" id="currentLocationArt"></div>
+                    <div class="location-desc" id="currentLocationDesc">Pearl-barked trees hum with circuit-light.</div>
+                </div>
+
+                <div class="location-list" id="locationList"></div>
+            </div>
+        </section>
+
+        <section class="panel log-panel">
+            <div class="log-container">
+                <div class="log-title">EVENT LOG</div>
+                <div class="log-entries" id="eventLog">
+                    <div class="log-empty">Awaiting the first stirring of history...</div>
+                </div>
+            </div>
+        </section>
     </div>
 
     <script>
