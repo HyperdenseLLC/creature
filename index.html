@@ -11,10 +11,12 @@
             background: linear-gradient(135deg, #f5f5f0 0%, #e8e8e0 100%);
             font-family: 'Courier New', monospace;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
             min-height: 100vh;
             color: #2a2a2a;
+            gap: 20px;
         }
         .main-container {
             display: flex;
@@ -358,6 +360,62 @@
         .location-btn:disabled {
             opacity: 0.7;
         }
+        .log-container {
+            background: white;
+            border: 3px solid #d0d0c8;
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 1200px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .log-title {
+            text-align: center;
+            font-size: 1.1em;
+            color: #6a6a60;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #d0d0c8;
+            padding-bottom: 10px;
+        }
+        .log-entries {
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 12px;
+            padding: 15px;
+            max-height: 220px;
+            overflow-y: auto;
+            font-size: 0.85em;
+            line-height: 1.4;
+            color: #4a4a48;
+        }
+        .log-entry {
+            padding: 10px;
+            border-radius: 10px;
+            background: white;
+            border: 1px solid #e0e0d8;
+            margin-bottom: 10px;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+        }
+        .log-entry:last-child {
+            margin-bottom: 0;
+        }
+        .log-entry-cycle {
+            display: block;
+            font-size: 0.75em;
+            color: #a0a098;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+        }
+        .log-entry-message {
+            white-space: pre-line;
+            word-break: break-word;
+        }
+        .log-empty {
+            text-align: center;
+            color: #a0a098;
+            font-style: italic;
+        }
     </style>
 </head>
 <body>
@@ -454,7 +512,14 @@
                 <div class="location-desc" id="currentLocationDesc">Pearl-barked trees hum with circuit-light.</div>
             </div>
             
-            <div class="location-list" id="locationList"></div>
+        <div class="location-list" id="locationList"></div>
+        </div>
+    </div>
+
+    <div class="log-container">
+        <div class="log-title">EVENT LOG</div>
+        <div class="log-entries" id="eventLog">
+            <div class="log-empty">Awaiting the first stirring of history...</div>
         </div>
     </div>
 
@@ -1133,6 +1198,48 @@
             nextLocationDelay: 0
         };
 
+        const LOG_MAX_ENTRIES = 60;
+        const logEntries = [];
+
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+        }
+
+        function renderLog() {
+            const logElement = document.getElementById('eventLog');
+            if (!logElement) return;
+
+            if (logEntries.length === 0) {
+                logElement.innerHTML = '<div class="log-empty">Awaiting the first stirring of history...</div>';
+                return;
+            }
+
+            logElement.innerHTML = logEntries.map(entry => {
+                const cycleLabel = `Cycle ${entry.cycle}`;
+                const messageHtml = escapeHtml(entry.message).replace(/\n/g, '<br>');
+                return `
+                    <div class="log-entry">
+                        <span class="log-entry-cycle">${cycleLabel}</span>
+                        <div class="log-entry-message">${messageHtml}</div>
+                    </div>
+                `;
+            }).join('');
+
+            logElement.scrollTop = 0;
+        }
+
+        function addLogEntry(message) {
+            const cycle = typeof state !== 'undefined' ? state.totalAge : 0;
+            logEntries.unshift({ cycle, message });
+            if (logEntries.length > LOG_MAX_ENTRIES) {
+                logEntries.pop();
+            }
+            renderLog();
+        }
+
         const messages = {
             feed: [
                 'The being absorbs nutrients from the White Forest...',
@@ -1495,6 +1602,12 @@
             scheduleNextTravel();
             updateDisplay();
             updatePauseButton();
+            const initialMessage = document.getElementById('message').textContent.trim();
+            if (initialMessage) {
+                addLogEntry(initialMessage);
+            } else {
+                renderLog();
+            }
             startSimulation();
         }
 
@@ -1778,6 +1891,7 @@
             const display = document.querySelector('.display');
             display.classList.add('pulse');
             setTimeout(() => display.classList.remove('pulse'), 600);
+            addLogEntry(msg);
         }
 
         function randomChoice(arr) {
