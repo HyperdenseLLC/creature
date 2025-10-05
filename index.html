@@ -34,6 +34,10 @@
             grid-column: 1;
             justify-content: flex-start;
         }
+        .panel.map-panel {
+            grid-column: 1;
+            justify-content: flex-start;
+        }
         .panel.locations-panel {
             grid-column: 2;
             justify-content: flex-start;
@@ -78,6 +82,131 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
+        }
+        .map-container {
+            background: white;
+            border: 3px solid #d0d0c8;
+            border-radius: 20px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .map-title {
+            text-align: center;
+            font-size: 1.1em;
+            color: #6a6a60;
+            letter-spacing: 1.5px;
+        }
+        .map-subtitle {
+            text-align: center;
+            font-size: 0.75em;
+            color: #a0a098;
+            line-height: 1.4;
+        }
+        .map-display {
+            background: #f8f8f4;
+            border: 2px solid #d0d0c8;
+            border-radius: 12px;
+            padding: 18px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.85em;
+            line-height: 1.15;
+            white-space: pre;
+            color: #4a4a48;
+            text-align: center;
+        }
+        .map-legend {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            font-size: 0.75em;
+            color: #8c8c82;
+            flex-wrap: wrap;
+        }
+        .map-legend span {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .map-legend-icon {
+            font-size: 1em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+        }
+        .map-legend-icon.current {
+            color: #8fa8bc;
+        }
+        .map-legend-icon.visited {
+            color: #7a8c96;
+        }
+        .map-legend-icon.discovered {
+            color: #b8c5d0;
+        }
+        .map-legend-icon.locked {
+            color: #b5b5ab;
+        }
+        .map-sites {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .map-site {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f8f8f4;
+            border: 1px solid #d0d0c8;
+            border-radius: 10px;
+            padding: 10px 12px;
+        }
+        .map-site-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .map-site-name {
+            font-size: 0.8em;
+            color: #6a6a60;
+            letter-spacing: 0.5px;
+        }
+        .map-site-status {
+            font-size: 0.7em;
+            color: #9a9a92;
+            letter-spacing: 0.4px;
+        }
+        .map-symbol {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 1em;
+            color: #6a6a60;
+            background: white;
+            border: 1px solid #d0d0c8;
+        }
+        .map-symbol.current {
+            color: #8fa8bc;
+            border-color: #8fa8bc;
+            box-shadow: 0 0 8px rgba(143, 168, 188, 0.4);
+        }
+        .map-symbol.visited {
+            color: #7a8c96;
+        }
+        .map-symbol.discovered {
+            color: #b8c5d0;
+        }
+        .map-symbol.locked {
+            color: #b5b5ab;
+            border-style: dashed;
         }
         .inventory-title {
             text-align: center;
@@ -639,6 +768,7 @@
                 grid-template-columns: 1fr;
             }
             .panel.creature-panel,
+            .panel.map-panel,
             .panel.locations-panel,
             .panel.inventory-panel,
             .panel.log-panel {
@@ -646,6 +776,7 @@
                 justify-content: flex-start;
             }
             .container,
+            .map-container,
             .location-container,
             .inventory-container,
             .log-container {
@@ -664,6 +795,9 @@
                 padding: 24px;
             }
             .inventory-container {
+                padding: 24px;
+            }
+            .map-container {
                 padding: 24px;
             }
             .current-location-display {
@@ -689,6 +823,7 @@
                 gap: 16px;
             }
             .container,
+            .map-container,
             .location-container,
             .inventory-container,
             .log-container {
@@ -783,6 +918,7 @@
                 box-sizing: border-box;
             }
             .panel.creature-panel,
+            .panel.map-panel,
             .panel.locations-panel,
             .panel.inventory-panel,
             .panel.log-panel {
@@ -795,6 +931,9 @@
             }
             .locations-panel > .location-container {
                 width: min(100%, 360px);
+            }
+            .map-panel > .map-container {
+                width: min(100%, 500px);
             }
             .inventory-panel > .inventory-container {
                 width: min(100%, 360px);
@@ -883,6 +1022,21 @@
                     <span style="color: #d0d0c8;">—none yet—</span>
                 </div>
             </div>
+            </div>
+        </section>
+
+        <section class="panel map-panel">
+            <div class="map-container">
+                <div class="map-title">OVERWORLD MAP</div>
+                <div class="map-subtitle">Glyph-rendered expanse of Sorn-Lai.</div>
+                <pre class="map-display" id="worldMapDisplay"></pre>
+                <div class="map-legend">
+                    <span><span class="map-legend-icon current">◎</span>Current</span>
+                    <span><span class="map-legend-icon visited">◍</span>Visited</span>
+                    <span><span class="map-legend-icon discovered">◌</span>Discovered</span>
+                    <span><span class="map-legend-icon locked">·</span>Veiled</span>
+                </div>
+                <div class="map-sites" id="mapSiteList"></div>
             </div>
         </section>
 
@@ -1314,6 +1468,32 @@
      ◌`
                 ]
             }
+        };
+
+        const MAP_TEMPLATE = [
+            '╔══════════════════════╗',
+            '║░░░░░░░░░░░░▒▒▒▒▒▒▒▒░░║',
+            '║░░░░░░░░░░▒▒▒▒▒▒▒▒▒▒░░║',
+            '║░░░░░░░▒▒▒▒▓▓▓▒▒▒▒▒▒░░║',
+            '║░░░░░▒▒▒▒▓▓▓▓▓▒▒▒▒▒░░░║',
+            '║░░░▒▒▒▒▓▓▓≈≈≈▓▓▒▒▒▒░░░║',
+            '║░░▒▒▒▒▓▓≈≈≈≈≈▓▓▒▒▒▒░░░║',
+            '║░░▒▒▒▒▓≈≈≈≈≈≈≈▓▒▒▒▒░░░║',
+            '║░░▒▒▒▒▓≈≈≈≈≈≈≈▓▒▒▒░░░░║',
+            '║░░░▒▒▒▒▓▓≈≈≈▓▓▒▒▒░░░░░║',
+            '║░░░░▒▒▒▒▓▓▓▓▒▒▒▒░░░░░░║',
+            '║░░░░░▒▒▒▒▒▒▒▒▒▒░░░░░░░║',
+            '╚══════════════════════╝'
+        ];
+
+        const MAP_LOCATIONS = {
+            white_forest: { x: 5, y: 2 },
+            havens_rest: { x: 12, y: 5 },
+            duskwood: { x: 8, y: 6 },
+            living_waters: { x: 15, y: 7 },
+            network_sanctum: { x: 17, y: 3 },
+            seven_tableaus: { x: 11, y: 8 },
+            void_edge: { x: 18, y: 9 }
         };
 
         const stages = [
@@ -1943,6 +2123,88 @@
                 return 'Accessible from awakening.';
             }
             return `Revealed at ${getStageLabel(stageIndex)}.`;
+        }
+
+        function renderWorldMap() {
+            const mapElement = document.getElementById('worldMapDisplay');
+            if (!mapElement) return;
+
+            const mapRows = MAP_TEMPLATE.map(row => row.split(''));
+
+            Object.entries(MAP_LOCATIONS).forEach(([id, meta]) => {
+                const loc = LOCATIONS[id];
+                if (!loc) return;
+                const row = mapRows[meta.y];
+                if (!row || typeof row[meta.x] === 'undefined') return;
+
+                const isCurrent = state.location === id;
+                const isVisited = state.visitedLocations.has(id);
+                const isUnlocked = state.stage >= loc.unlockStage;
+
+                let symbol = '·';
+                if (isCurrent) {
+                    symbol = '◎';
+                } else if (isVisited) {
+                    symbol = '◍';
+                } else if (isUnlocked) {
+                    symbol = '◌';
+                }
+
+                row[meta.x] = symbol;
+            });
+
+            mapElement.textContent = mapRows.map(row => row.join('')).join('\n');
+
+            const siteList = document.getElementById('mapSiteList');
+            if (!siteList) return;
+
+            const siteEntries = Object.entries(MAP_LOCATIONS).map(([id, meta]) => {
+                const loc = LOCATIONS[id];
+                if (!loc) return '';
+
+                const isCurrent = state.location === id;
+                const isVisited = state.visitedLocations.has(id);
+                const isUnlocked = state.stage >= loc.unlockStage;
+
+                let symbolClass = 'map-symbol';
+                let symbol = '·';
+
+                if (isCurrent) {
+                    symbol = '◎';
+                    symbolClass += ' current';
+                } else if (isVisited) {
+                    symbol = '◍';
+                    symbolClass += ' visited';
+                } else if (isUnlocked) {
+                    symbol = '◌';
+                    symbolClass += ' discovered';
+                } else {
+                    symbolClass += ' locked';
+                }
+
+                let statusText;
+                if (isCurrent) {
+                    statusText = 'Current position';
+                } else if (isVisited) {
+                    statusText = 'Visited';
+                } else if (isUnlocked) {
+                    statusText = 'Discovered';
+                } else {
+                    statusText = `Veiled — ${getStageLabel(loc.unlockStage)}`;
+                }
+
+                return `
+                    <div class="map-site">
+                        <span class="${symbolClass}">${symbol}</span>
+                        <div class="map-site-meta">
+                            <div class="map-site-name">${escapeHtml(loc.name)}</div>
+                            <div class="map-site-status">${escapeHtml(statusText)}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            siteList.innerHTML = siteEntries;
         }
 
         function escapeHtml(str) {
@@ -2784,6 +3046,7 @@
                 `;
             }).join('');
 
+            renderWorldMap();
             renderInventory();
             displayBadges();
         }
