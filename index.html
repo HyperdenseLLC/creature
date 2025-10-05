@@ -347,6 +347,52 @@
             color: #a0a098;
             font-style: italic;
         }
+        .location-effects {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            justify-content: center;
+        }
+        .location-effect-pill {
+            background: #e6edf2;
+            border: 1px solid #c5d2dc;
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.65em;
+            letter-spacing: 0.5px;
+            color: #6b7a84;
+            text-transform: uppercase;
+        }
+        .location-traits {
+            margin: 12px auto 0;
+            display: grid;
+            gap: 6px;
+            font-size: 0.75em;
+            color: #7a7a70;
+            text-align: left;
+            max-width: 240px;
+        }
+        .location-traits div {
+            position: relative;
+            padding-left: 16px;
+            line-height: 1.3;
+        }
+        .location-traits div::before {
+            content: '✧';
+            position: absolute;
+            left: 0;
+            color: #8fa8bc;
+            font-size: 0.8em;
+            top: 2px;
+        }
+        .location-unlock {
+            margin: 14px auto 0;
+            font-size: 0.65em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #b0b0a6;
+        }
         .location-list {
             display: flex;
             flex-direction: column;
@@ -361,6 +407,11 @@
             cursor: pointer;
             transition: all 0.2s;
             text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            align-items: flex-start;
+            white-space: normal;
         }
         .location-btn:hover {
             background: #d8d8d0;
@@ -370,6 +421,7 @@
             background: linear-gradient(135deg, #b8c5d0, #8fa8bc);
             border-color: #6a8a9c;
             color: white;
+            box-shadow: 0 6px 18px rgba(143, 168, 188, 0.35);
         }
         .location-btn.locked {
             opacity: 0.4;
@@ -381,6 +433,58 @@
         }
         .location-btn:disabled {
             opacity: 0.7;
+        }
+        .location-btn-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 10px;
+        }
+        .location-btn-name {
+            font-weight: bold;
+            color: inherit;
+        }
+        .location-btn-status {
+            font-size: 0.65em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: #9a9a92;
+        }
+        .location-btn-desc {
+            font-size: 0.75em;
+            color: #8d8d82;
+            line-height: 1.3;
+        }
+        .location-btn-effects {
+            font-size: 0.7em;
+            color: #7a8c96;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .location-btn-trait {
+            font-size: 0.7em;
+            color: #9a9a90;
+            line-height: 1.3;
+        }
+        .location-btn-stage {
+            font-size: 0.65em;
+            color: #b5b5ab;
+            letter-spacing: 0.5px;
+        }
+        .location-btn.active .location-btn-status,
+        .location-btn.active .location-btn-effects,
+        .location-btn.active .location-btn-trait {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        .location-btn.locked .location-btn-status {
+            color: #b5b5ab;
+        }
+        .location-btn.locked .location-btn-desc,
+        .location-btn.locked .location-btn-effects,
+        .location-btn.locked .location-btn-trait,
+        .location-btn.locked .location-btn-stage {
+            color: #b5b5ab;
         }
         .log-container {
             background: white;
@@ -661,6 +765,9 @@
                     <div class="location-name" id="currentLocationName">White Forest</div>
                     <div class="location-ascii" id="currentLocationArt"></div>
                     <div class="location-desc" id="currentLocationDesc">Pearl-barked trees hum with circuit-light.</div>
+                    <div class="location-effects" id="currentLocationEffects"></div>
+                    <div class="location-traits" id="currentLocationTraits"></div>
+                    <div class="location-unlock" id="currentLocationUnlock"></div>
                 </div>
 
                 <div class="location-list" id="locationList"></div>
@@ -685,13 +792,24 @@
                 unlockStage: 0,
                 effects: { flux: 1, harmony: 1 },
                 badge: 'explorer_white',
-                ascii: `
-  ░▒▓█▓▒░
+                features: [
+                    'Resonant rootlight trickles steady flux into the being.',
+                    'Songbirds of code soften errant mood oscillations.'
+                ],
+                ascii: [
+`  ░▒▓█▓▒░
  ░▒▓███▓▒░
 ░▒▓█████▓▒░
   ░▒███▒░
     ║║║
+   ░║║║░`,
+`  ░▒▓█▓▒░
+ ░▒▓███▓▒░
+░▒▓██▓██▓▒░
+  ░▒███▒░
+    ║╫║
    ░║║║░`
+                ]
             },
             havens_rest: {
                 name: "Haven's Rest",
@@ -699,12 +817,22 @@
                 unlockStage: 1,
                 effects: { harmony: 2 },
                 badge: 'explorer_haven',
-                ascii: `
- ╔═══╗ ╔═══╗
+                features: [
+                    'Memory braids align shared dreams into harmony.',
+                    'Communal hearth nodes restore trust between cycles.'
+                ],
+                ascii: [
+` ╔═══╗ ╔═══╗
  ║ ◉ ║ ║ ◉ ║
  ╚═══╝ ╚═══╝
    ═══════
-   ░░░░░░░`
+   ░░░░░░░`,
+` ╔═══╗ ╔═══╗
+ ║ ◉ ║ ║ ◉ ║
+ ╚═══╝ ╚═══╝
+   ═╬╬╬╬╬═
+   ░░▒░▒░░`
+                ]
             },
             duskwood: {
                 name: 'Duskwood',
@@ -712,12 +840,22 @@
                 unlockStage: 2,
                 effects: { flux: 1, saturation: 1 },
                 badge: 'explorer_dusk',
-                ascii: `
- ░▒▓  ▓▒░
+                features: [
+                    'Twilight spores etch adaptive glyphs across the shell.',
+                    'Hidden monitors coax saturation from deep roots.'
+                ],
+                ascii: [
+` ░▒▓  ▓▒░
 ░▒▓█  █▓▒░
  ▒▓██▓▓▒
   ░▒▒▒░
-   ║ ║`
+   ║ ║`,
+` ░▒▓  ▓▒░
+░▒▓█⋆ █▓▒░
+ ▒▓██▓▓▒
+  ░▒▒▒░
+   ║∼║`
+                ]
             },
             living_waters: {
                 name: 'Living Waters',
@@ -725,12 +863,22 @@
                 unlockStage: 3,
                 effects: { harmony: 1, saturation: 2 },
                 badge: 'explorer_waters',
-                ascii: `
- ≈≈≈≈≈≈≈
+                features: [
+                    'Liquid mindstreams accelerate saturation uptake.',
+                    'Currents harmonize conflicting thought-waves.'
+                ],
+                ascii: [
+` ≈≈≈≈≈≈≈
 ≈ ◉ ≈ ◉ ≈
  ≈≈≈≈≈≈≈
 ≈ ∼ ≈ ∼ ≈
+ ≈≈≈≈≈≈≈`,
+` ≈≈≈≈≈≈≈
+≈ ∼ ≈ ∼ ≈
+ ≈≈≈≈≈≈≈
+≈ ◉ ≈ ◉ ≈
  ≈≈≈≈≈≈≈`
+                ]
             },
             network_sanctum: {
                 name: 'Network Sanctum',
@@ -738,12 +886,22 @@
                 unlockStage: 4,
                 effects: { saturation: 3 },
                 badge: 'explorer_network',
-                ascii: `
- ╔═══╗
+                features: [
+                    'Data crystals condense into pure saturation shards.',
+                    'Triad sentinels demand precise harmony control.'
+                ],
+                ascii: [
+` ╔═══╗
  ║▓▓▓║
  ╠═══╣
  ║◉◉◉║
+ ╚═══╝`,
+` ╔═══╗
+ ║▓◉▓║
+ ╠═══╣
+ ║◉◎◉║
  ╚═══╝`
+                ]
             },
             seven_tableaus: {
                 name: 'Seven Tableaus',
@@ -751,11 +909,20 @@
                 unlockStage: 5,
                 effects: { flux: 1, harmony: 1, saturation: 2 },
                 badge: 'explorer_tableaus',
-                ascii: `
- ◇ ◇ ◇
+                features: [
+                    'Each tableau echoes possible destinies for the being.',
+                    'Glyphic currents weave flux, harmony, and saturation together.'
+                ],
+                ascii: [
+` ◇ ◇ ◇
 ◇ ◉ ◇
  ◇ ◇ ◇
-   ⋈`
+   ⋈`,
+` ◇ ◇ ◇
+◇ ◎ ◇
+ ◇ ◇ ◇
+   ⋇`
+                ]
             },
             void_edge: {
                 name: 'Void Edge',
@@ -763,11 +930,20 @@
                 unlockStage: 7,
                 effects: { saturation: 3, harmony: -1 },
                 badge: 'explorer_void',
-                ascii: `
-  ░░ ∞ ░░
+                features: [
+                    'Peering into the gap strains harmony yet refines perception.',
+                    'Edge currents distill raw saturation from nothingness.'
+                ],
+                ascii: [
+`  ░░ ∞ ░░
  ░ ∘ ◉ ∘ ░
   ░░ ∞ ░░
-     ○`
+     ○`,
+`  ░░ ∞ ░░
+ ░ ∘ ◎ ∘ ░
+  ░░ ∞ ░░
+     ◌`
+                ]
             }
         };
 
@@ -1350,15 +1526,57 @@
             location: 'white_forest',
             visitedLocations: new Set(['white_forest']),
             locationTimer: 0,
-            nextLocationDelay: 0
+            nextLocationDelay: 0,
+            locationAnimFrame: 0
         };
 
         const MIN_STAGE_DURATION = 10;
         const LOG_MAX_ENTRIES = 60;
         const logEntries = [];
 
+        const EFFECT_LABELS = {
+            flux: 'Flux',
+            harmony: 'Harmony',
+            saturation: 'Saturation'
+        };
+
+        function getEffectEntries(effectMap = {}) {
+            return Object.entries(effectMap).map(([key, value]) => ({
+                key,
+                label: EFFECT_LABELS[key] || key,
+                value
+            }));
+        }
+
+        function formatEffectValue(value) {
+            return value > 0 ? `+${value}` : `${value}`;
+        }
+
+        function getLocationFrames(locationId) {
+            const location = LOCATIONS[locationId];
+            if (!location) return [''];
+            if (Array.isArray(location.ascii)) {
+                return location.ascii;
+            }
+            return [location.ascii];
+        }
+
+        function getStageLabel(stageIndex) {
+            const stage = stages[stageIndex];
+            if (!stage) return `Stage ${stageIndex}`;
+            return `${stage.name} (Stage ${stageIndex})`;
+        }
+
+        function describeUnlock(stageIndex) {
+            if (!stageIndex) {
+                return 'Accessible from awakening.';
+            }
+            return `Revealed at ${getStageLabel(stageIndex)}.`;
+        }
+
         function escapeHtml(str) {
-            return str
+            const safe = str == null ? '' : String(str);
+            return safe
                 .replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;');
@@ -1520,6 +1738,7 @@
 
             state.location = locationId;
             state.visitedLocations.add(locationId);
+            state.locationAnimFrame = 0;
 
             const travelMessage = auto
                 ? `✦ The being drifts toward ${location.name} ✦\n${location.desc}`
@@ -1874,6 +2093,11 @@
             const currentStage = stages[state.stage];
             state.animFrame = (state.animFrame + 1) % currentStage.arts.length;
             document.getElementById('asciiArt').textContent = currentStage.arts[state.animFrame];
+            const locationFrames = getLocationFrames(state.location);
+            if (locationFrames.length) {
+                state.locationAnimFrame = (state.locationAnimFrame + 1) % locationFrames.length;
+                document.getElementById('currentLocationArt').textContent = locationFrames[state.locationAnimFrame];
+            }
         }
 
         function autoAction() {
@@ -2034,16 +2258,62 @@
             // Update location display
             const currentLoc = LOCATIONS[state.location];
             document.getElementById('currentLocationName').textContent = currentLoc.name;
-            document.getElementById('currentLocationArt').textContent = currentLoc.ascii;
+            const locationFrames = getLocationFrames(state.location);
+            if (state.locationAnimFrame >= locationFrames.length) {
+                state.locationAnimFrame = 0;
+            }
+            document.getElementById('currentLocationArt').textContent = locationFrames[state.locationAnimFrame];
             document.getElementById('currentLocationDesc').textContent = currentLoc.desc;
-            
+
+            const effectContainer = document.getElementById('currentLocationEffects');
+            const currentEffects = getEffectEntries(currentLoc.effects);
+            if (currentEffects.length) {
+                effectContainer.innerHTML = currentEffects.map(effect => {
+                    const label = escapeHtml(effect.label);
+                    const value = escapeHtml(formatEffectValue(effect.value));
+                    return `<span class="location-effect-pill">${label} ${value}</span>`;
+                }).join('');
+            } else {
+                effectContainer.innerHTML = '<span class="location-effect-pill">No direct modifiers</span>';
+            }
+
+            const traitContainer = document.getElementById('currentLocationTraits');
+            const traits = currentLoc.features || [];
+            if (traits.length) {
+                traitContainer.innerHTML = traits.map(trait => `<div>${escapeHtml(trait)}</div>`).join('');
+            } else {
+                traitContainer.innerHTML = '<div>Mysterious energies linger here.</div>';
+            }
+
+            document.getElementById('currentLocationUnlock').textContent = describeUnlock(currentLoc.unlockStage);
+
             const locationList = document.getElementById('locationList');
             locationList.innerHTML = Object.keys(LOCATIONS).map(locId => {
                 const loc = LOCATIONS[locId];
                 const isActive = state.location === locId;
                 const isLocked = state.stage < loc.unlockStage;
                 const classes = `location-btn ${isActive ? 'active' : ''} ${isLocked ? 'locked' : ''}`;
-                return `<button class="${classes}" disabled title="${loc.desc}">${loc.name}</button>`;
+                const effectEntries = getEffectEntries(loc.effects);
+                const effectSummary = effectEntries.length
+                    ? effectEntries.map(effect => `${effect.label} ${formatEffectValue(effect.value)}`).join(' · ')
+                    : 'No direct modifiers';
+                const traitPreview = loc.features && loc.features.length
+                    ? `<div class="location-btn-trait">${escapeHtml(loc.features[0])}</div>`
+                    : '';
+                const stageLine = `<div class="location-btn-stage">${escapeHtml(describeUnlock(loc.unlockStage))}</div>`;
+                const statusText = isActive ? 'CURRENT SITE' : (isLocked ? 'LOCKED' : 'DISCOVERED');
+                return `
+                    <button class="${classes}" disabled title="${escapeHtml(loc.desc)}">
+                        <div class="location-btn-header">
+                            <span class="location-btn-name">${escapeHtml(loc.name)}</span>
+                            <span class="location-btn-status">${statusText}</span>
+                        </div>
+                        <div class="location-btn-desc">${escapeHtml(loc.desc)}</div>
+                        <div class="location-btn-effects">${escapeHtml(effectSummary)}</div>
+                        ${traitPreview}
+                        ${stageLine}
+                    </button>
+                `;
             }).join('');
 
             displayBadges();
