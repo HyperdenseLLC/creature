@@ -1082,6 +1082,60 @@
     </div>
 
     <script>
+        let audioCtx = null;
+
+        const ACTION_TONES = {
+            feed: 360,
+            connect: 440,
+            rest: 300,
+            observe: 520,
+            default: 360
+        };
+
+        function ensureAudioContext() {
+            const Context = window.AudioContext || window.webkitAudioContext;
+            if (!Context) {
+                return null;
+            }
+
+            if (!audioCtx) {
+                audioCtx = new Context();
+            } else if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+
+            return audioCtx;
+        }
+
+        function playActionTone(action) {
+            try {
+                const ctx = ensureAudioContext();
+                if (!ctx) return;
+
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                const now = ctx.currentTime;
+                const frequency = ACTION_TONES[action] || ACTION_TONES.default;
+
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(frequency, now);
+
+                gain.gain.setValueAtTime(0.0001, now);
+                gain.gain.linearRampToValueAtTime(0.08, now + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.4);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start(now);
+                osc.stop(now + 0.45);
+            } catch (error) {
+                console.warn('Unable to play action tone', error);
+            }
+        }
+
+        document.addEventListener('pointerdown', ensureAudioContext, { once: true, passive: true });
+
         const ITEMS = {
             forest_spore: {
                 name: 'Forest Spore',
@@ -3379,6 +3433,7 @@
             state.harmony = Math.min(100, state.harmony + 5);
             const feedMessage = randomChoice(messages.feed);
             const feedBonus = maybeGainActionItem('feed');
+            playActionTone('feed');
             showMessage(feedMessage + feedBonus);
             updateDisplay();
         }
@@ -3395,6 +3450,7 @@
                 state.harmony = Math.min(100, state.harmony + 10);
                 const connectMessage = randomChoice(messages.connect);
                 const connectBonus = maybeGainActionItem('connect');
+                playActionTone('connect');
                 showMessage(connectMessage + connectBonus);
             } else {
                 showMessage('Not enough flux to establish connection...');
@@ -3413,6 +3469,7 @@
             state.harmony = Math.min(100, state.harmony + 12);
             const restMessage = randomChoice(messages.rest);
             const restBonus = maybeGainActionItem('rest');
+            playActionTone('rest');
             showMessage(restMessage + restBonus);
             updateDisplay();
         }
@@ -3427,6 +3484,7 @@
             state.saturation = Math.min(600, state.saturation + 2);
             const observeMessage = randomChoice(messages.observe);
             const observeBonus = maybeGainActionItem('observe');
+            playActionTone('observe');
             showMessage(observeMessage + observeBonus);
             updateDisplay();
         }
