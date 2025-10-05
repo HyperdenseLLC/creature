@@ -156,6 +156,7 @@
             border: 2px solid #d0d0c8;
             border-radius: 10px;
             padding: 20px;
+            padding-bottom: 90px;
             min-height: 200px;
             margin-bottom: 20px;
             text-align: center;
@@ -185,12 +186,13 @@
         }
         .creature-metrics {
             position: absolute;
-            top: 14px;
+            left: 14px;
             right: 14px;
-            display: grid;
-            gap: 6px;
-            max-width: 45%;
-            justify-items: end;
+            bottom: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
             pointer-events: none;
         }
         .creature-metric {
@@ -694,13 +696,14 @@
             }
             .display {
                 padding: 14px;
+                padding-bottom: 88px;
                 min-height: 160px;
             }
             .creature-metrics {
-                top: 12px;
+                left: 12px;
                 right: 12px;
-                max-width: 70%;
-                gap: 5px;
+                bottom: 12px;
+                gap: 6px;
             }
             .creature-metric {
                 font-size: 0.65em;
