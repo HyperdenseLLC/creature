@@ -1273,6 +1273,16 @@
                 ].join('\n'),
                 desc: 'Molten glass cooled within a falling star.'
             },
+            aurora_lens: {
+                name: 'Aurora Lens',
+                ascii: [
+                    '   ◐  ',
+                    '  ◓◑ ',
+                    '   ◒  ',
+                    '   ✧  '
+                ].join('\n'),
+                desc: 'Focuses meteor light into harmonic visions.'
+            },
             forest_blossom: {
                 name: 'Forest Blossom',
                 ascii: [
@@ -1292,6 +1302,26 @@
                     '   ◌ '
                 ].join('\n'),
                 desc: 'Smoldering remnant carried from the darkness.'
+            },
+            memory_spool: {
+                name: 'Memory Spool',
+                ascii: [
+                    '   ╭╮ ',
+                    '  ║∞║ ',
+                    '   ╰╯ ',
+                    '   ↺  '
+                ].join('\n'),
+                desc: 'Wound dreams guiding future anomalies.'
+            },
+            void_anchor: {
+                name: 'Void Anchor',
+                ascii: [
+                    '   ╔╗ ',
+                    '  ║⌀║ ',
+                    '   ╚╝ ',
+                    '   ⚓  '
+                ].join('\n'),
+                desc: 'Stabilizes encounters with encroaching darkness.'
             }
         };
 
@@ -2301,6 +2331,14 @@
             return `\n✧ Acquired: ${item.name}${suffix}!`;
         }
 
+        function hasItem(itemId) {
+            return (state.inventory[itemId] || 0) > 0;
+        }
+
+        function getItemCount(itemId) {
+            return state.inventory[itemId] || 0;
+        }
+
         function resolveActionItem(action) {
             switch (action) {
                 case 'feed':
@@ -2624,9 +2662,20 @@
         function checkRareEvents() {
             if (state.paused) return;
             if (state.age - state.lastRareEvent < 50) return;
-            
-            const eventChance = Math.random();
-            
+
+            if (tryCatalystEvent()) {
+                return;
+            }
+
+            let eventChance = Math.random();
+            if (hasItem('memory_spool')) {
+                eventChance -= 0.02;
+            }
+            if (hasItem('aurora_lens')) {
+                eventChance -= 0.01;
+            }
+            eventChance = Math.max(0, eventChance);
+
             if (eventChance < 0.05) {
                 triggerMeteorShower();
             } else if (eventChance < 0.08 && state.stage >= 3) {
@@ -2636,13 +2685,38 @@
             }
         }
 
+        function tryCatalystEvent() {
+            if (!state.inventory) return false;
+
+            if (!hasItem('aurora_lens') && getItemCount('white_glimmer') >= 3) {
+                triggerAuroraCatalyst();
+                return true;
+            }
+
+            if (!hasItem('memory_spool') && getItemCount('dream_resin') >= 3) {
+                triggerMemoryCascade();
+                return true;
+            }
+
+            if (!hasItem('void_anchor') && getItemCount('void_dust') >= 2) {
+                triggerVoidBeacon();
+                return true;
+            }
+
+            return false;
+        }
+
         function triggerMeteorShower() {
             state.lastRareEvent = state.age;
-            state.saturation = Math.min(600, state.saturation + 30);
-            state.harmony = Math.min(100, state.harmony + 20);
+            const hasLens = hasItem('aurora_lens');
+            const saturationGain = hasLens ? 45 : 30;
+            const harmonyGain = hasLens ? 30 : 20;
+            state.saturation = Math.min(600, state.saturation + saturationGain);
+            state.harmony = Math.min(100, state.harmony + harmonyGain);
             unlockBadge('meteor_witness');
             const bonus = addInventoryItem('meteor_glass');
-            showMessage('☄ A meteor shower illuminates the White Forest!\nCosmic energies infuse your being...' + bonus);
+            const lensMessage = hasLens ? '\nThe Aurora Lens focuses each flare into perfect clarity.' : '';
+            showMessage('☄ A meteor shower illuminates the White Forest!\nCosmic energies infuse your being...' + lensMessage + bonus);
             updateDisplay();
         }
 
@@ -2652,16 +2726,53 @@
             state.harmony = 100;
             unlockBadge('forest_blessed');
             const bonus = addInventoryItem('forest_blossom');
-            showMessage('✦ The ancient forest bestows its blessing!\nYou are filled with primordial energy...' + bonus);
+            const spoolMessage = hasItem('memory_spool')
+                ? '\nThe Memory Spool hums, mapping new pathways through time.'
+                : '';
+            showMessage('✦ The ancient forest bestows its blessing!\nYou are filled with primordial energy...' + spoolMessage + bonus);
             updateDisplay();
         }
 
         function triggerShadowEvent() {
             state.lastRareEvent = state.age;
-            state.flux = Math.max(10, state.flux - 20);
+            const anchored = hasItem('void_anchor');
+            if (anchored) {
+                state.flux = Math.min(100, state.flux + 10);
+                state.harmony = Math.min(100, state.harmony + 5);
+            } else {
+                state.flux = Math.max(10, state.flux - 20);
+            }
             unlockBadge('shadow_walker');
             const bonus = addInventoryItem('shadow_cinder');
-            showMessage('◐ Shadows gather... but you persist.\nDarkness is merely another teacher...' + bonus);
+            const anchorMessage = anchored
+                ? '\nThe Void Anchor stabilizes the darkness, turning it to your favor.'
+                : '\nDarkness is merely another teacher...';
+            showMessage('◐ Shadows gather... but you persist.' + anchorMessage + bonus);
+            updateDisplay();
+        }
+
+        function triggerAuroraCatalyst() {
+            state.lastRareEvent = state.age;
+            state.harmony = Math.min(100, state.harmony + 25);
+            const bonus = addInventoryItem('aurora_lens');
+            showMessage('✧ Prisms bloom from clustered white glimmers!\nAn Aurora Lens condenses starlight into guidance.' + bonus);
+            updateDisplay();
+        }
+
+        function triggerMemoryCascade() {
+            state.lastRareEvent = state.age;
+            state.saturation = Math.min(600, state.saturation + 20);
+            state.nextLocationDelay = Math.max(0, state.nextLocationDelay - 3);
+            const bonus = addInventoryItem('memory_spool');
+            showMessage('⌛ Dream threads weave themselves into a Memory Spool.\nFuture anomalies draw a little nearer.' + bonus);
+            updateDisplay();
+        }
+
+        function triggerVoidBeacon() {
+            state.lastRareEvent = state.age;
+            state.harmony = Math.min(100, state.harmony + 15);
+            const bonus = addInventoryItem('void_anchor');
+            showMessage('⌀ Void dust coils into a steady beacon.\nA Void Anchor now answers your call.' + bonus);
             updateDisplay();
         }
 
