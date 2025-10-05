@@ -84,6 +84,7 @@
             margin-bottom: 20px;
             text-align: center;
             position: relative;
+            overflow: hidden;
         }
         .display.pulse {
             box-shadow: 0 0 20px rgba(143, 168, 188, 0.4);
@@ -105,6 +106,41 @@
             background: linear-gradient(135deg, #ffffff 0%, #f0f0f0 100%);
             border-color: #a0a0a0;
             box-shadow: 0 0 25px rgba(0, 0, 0, 0.1);
+        }
+        .creature-metrics {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            display: grid;
+            gap: 6px;
+            max-width: 45%;
+            justify-items: end;
+            pointer-events: none;
+        }
+        .creature-metric {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #d0d0c8;
+            border-radius: 999px;
+            padding: 6px 12px;
+            font-size: 0.7em;
+            letter-spacing: 0.5px;
+            color: #6a6a60;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(2px);
+            pointer-events: auto;
+        }
+        .creature-metric span {
+            text-transform: none;
+            color: #4a4a48;
+            font-weight: bold;
+        }
+        .creature-metric.mood span,
+        .creature-metric.condition span {
+            text-transform: capitalize;
         }
         .rebirth-overlay {
             position: absolute;
@@ -578,6 +614,16 @@
                 padding: 14px;
                 min-height: 160px;
             }
+            .creature-metrics {
+                top: 12px;
+                right: 12px;
+                max-width: 70%;
+                gap: 5px;
+            }
+            .creature-metric {
+                font-size: 0.65em;
+                padding: 6px 10px;
+            }
             .ascii-art {
                 font-size: clamp(12px, 4vw, 18px);
             }
@@ -678,6 +724,12 @@
             <div class="subtitle">guild research subject 00110100</div>
             
             <div class="display">
+                <div class="creature-metrics">
+                    <div class="creature-metric condition">Condition <span id="condition">normal</span></div>
+                    <div class="creature-metric mood">Mood <span id="mood">curious</span></div>
+                    <div class="creature-metric age">Age <span id="age">0</span> cycles</div>
+                    <div class="creature-metric rebirths">Rebirths <span id="rebirths">0</span></div>
+                </div>
                 <div class="stage-name" id="stageName">Dormant Egg</div>
                 <div class="ascii-art" id="asciiArt"></div>
                 <div class="message" id="message">The egg pulses softly with nascent consciousness...</div>
@@ -711,18 +763,6 @@
                 </div>
                 <div class="stat">
                     <div class="stat-label">ACTIONS: <span id="actionPoints" style="font-weight: bold; color: #8fa8bc;">0</span> / <span id="maxActionPoints">3</span></div>
-                </div>
-                <div class="stat">
-                    <div class="stat-label">AGE: <span id="age">0</span> cycles</div>
-                </div>
-                <div class="stat">
-                    <div class="stat-label">MOOD: <span id="mood" style="text-transform: capitalize;">curious</span></div>
-                </div>
-                <div class="stat">
-                    <div class="stat-label">CONDITION: <span id="condition" style="text-transform: capitalize;">normal</span></div>
-                </div>
-                <div class="stat">
-                    <div class="stat-label">REBIRTHS: <span id="rebirths">0</span></div>
                 </div>
             </div>
             
