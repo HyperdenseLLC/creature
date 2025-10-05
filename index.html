@@ -468,10 +468,11 @@
             .container,
             .location-container,
             .log-container {
-                padding: 22px;
+                padding: 18px;
             }
             .display {
-                padding: 16px;
+                padding: 14px;
+                min-height: 160px;
             }
             .ascii-art {
                 font-size: clamp(12px, 4vw, 18px);
@@ -516,8 +517,9 @@
 
         @media (max-width: 768px) {
             body {
-                padding: 20px 0 40px;
-                justify-content: center;
+                padding: 12px 0 32px;
+                justify-content: flex-start;
+                align-items: stretch;
             }
             .panel-slider {
                 display: flex;
@@ -541,7 +543,7 @@
                 flex: 0 0 100%;
                 scroll-snap-align: center;
                 scroll-snap-stop: always;
-                padding: 20px 16px 40px;
+                padding: 16px 12px 28px;
                 justify-content: center;
                 box-sizing: border-box;
             }
@@ -552,6 +554,8 @@
             }
             .panel > * {
                 width: min(100%, 500px);
+                max-height: calc(100vh - 140px);
+                overflow-y: auto;
             }
             .locations-panel > .location-container {
                 width: min(100%, 360px);
