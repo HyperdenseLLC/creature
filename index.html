@@ -1528,8 +1528,8 @@
         }
 
         function scheduleNextTravel() {
-            const minDelay = 45;
-            const maxDelay = 90;
+            const minDelay = 80;
+            const maxDelay = 140;
             state.locationTimer = 0;
             state.nextLocationDelay = minDelay + Math.floor(Math.random() * (maxDelay - minDelay + 1));
         }
@@ -1768,16 +1768,16 @@
         function startSimulation() {
             if (state.paused) return;
             clearIntervals();
-            const baseGameSpeed = 6000;
-            const baseAnimSpeed = 1200;
-            const baseActionSpeed = 6000;
+            const baseGameSpeed = 9000;
+            const baseAnimSpeed = 1800;
+            const baseActionSpeed = 9000;
 
             gameInterval = setInterval(update, baseGameSpeed / state.speed);
             const animationSpeedMultiplier = Math.min(Math.max(state.speed, 1), 2);
             animInterval = setInterval(animate, baseAnimSpeed / animationSpeedMultiplier);
             actionInterval = setInterval(autoAction, baseActionSpeed / state.speed);
-            moodInterval = setInterval(updateMood, 12000 / state.speed);
-            eventCheckInterval = setInterval(checkRareEvents, 22500 / state.speed);
+            moodInterval = setInterval(updateMood, 18000 / state.speed);
+            eventCheckInterval = setInterval(checkRareEvents, 36000 / state.speed);
         }
 
         function clearIntervals() {
