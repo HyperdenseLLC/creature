@@ -1098,6 +1098,10 @@
             12: 'eternal'
         };
 
+        function clamp(value, min, max) {
+            return Math.max(min, Math.min(max, value));
+        }
+
         let state = {
             flux: 50,
             saturation: 0,
@@ -1255,15 +1259,15 @@
         function applyLocationEffects() {
             const location = LOCATIONS[state.location];
             if (!location || !location.effects) return;
-            
-            if (location.effects.flux) {
-                state.flux = Math.min(100, state.flux + location.effects.flux);
+
+            if (typeof location.effects.flux === 'number') {
+                state.flux = clamp(state.flux + location.effects.flux, 0, 100);
             }
-            if (location.effects.saturation) {
-                state.saturation = Math.min(600, state.saturation + location.effects.saturation);
+            if (typeof location.effects.saturation === 'number') {
+                state.saturation = clamp(state.saturation + location.effects.saturation, 0, 600);
             }
-            if (location.effects.harmony) {
-                state.harmony = Math.min(100, state.harmony + location.effects.harmony);
+            if (typeof location.effects.harmony === 'number') {
+                state.harmony = clamp(state.harmony + location.effects.harmony, 0, 100);
             }
         }
 
